@@ -1,13 +1,10 @@
-import 'dart:async';
-
+///
+/// imports
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class AiAmap {
-  static const MethodChannel _channel =
-      const MethodChannel('ai_amap');
+///
+/// parts
+part 'ai_amap_widget.dart';
 
-  static Future<String> get platformVersion async {
-    final String version = await _channel.invokeMethod('getPlatformVersion');
-    return version;
-  }
-}
+part 'ai_amap_helper.dart';

@@ -18,6 +18,6 @@ void main() {
   });
 
   test('getPlatformVersion', () async {
-    expect(await AiAmap.platformVersion, '42');
+    expect(await AiAMapHelper.startLocation(), '42');
   });
 }
