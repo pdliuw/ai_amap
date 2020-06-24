@@ -1,3 +1,7 @@
-## 0.0.1
+## [0.0.2]
 
-* TODO: Describe initial release.
+* Add: android map
+
+## [0.0.1]
+
+* Initialize
