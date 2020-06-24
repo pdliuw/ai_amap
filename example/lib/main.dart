@@ -52,7 +52,7 @@ class _MyAppState extends State<MyApp> {
         body: Column(
           children: [
             Expanded(
-              child: AiAmapPlatformWidget(),
+              child: AiAMapPlatformWidget(),
             ),
           ],
         ),

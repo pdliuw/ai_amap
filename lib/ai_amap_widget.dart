@@ -1,13 +1,16 @@
 part of 'ai_amap.dart';
 
 ///
-/// AiAmapPlatformWidget
-class AiAmapPlatformWidget extends StatefulWidget {
+/// AiAMapPlatformWidget
+// ignore: must_be_immutable
+class AiAMapPlatformWidget extends StatefulWidget {
   ///
   static const String UNSUPPORTED_DESCRIPTION_DEFAULT = "Unsupported platform";
   String _unsupportedDescription;
 
-  AiAmapPlatformWidget({
+  ///
+  /// constructor
+  AiAMapPlatformWidget({
     String unsupportedDescription = UNSUPPORTED_DESCRIPTION_DEFAULT,
   }) {
     _unsupportedDescription =
@@ -16,15 +19,20 @@ class AiAmapPlatformWidget extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    return AiAmapPlatformState(unsupportedDescription: _unsupportedDescription);
+    return _AiAMapPlatformState(
+        unsupportedDescription: _unsupportedDescription);
   }
 }
 
-class AiAmapPlatformState extends State<AiAmapPlatformWidget> {
+///
+/// _AiAMapPlatformState
+class _AiAMapPlatformState extends State<AiAMapPlatformWidget> {
   static const String _viewTypeId = "view_type_id_map_platform_view";
   String _unsupportedDescription;
 
-  AiAmapPlatformState({
+  ///
+  /// constructor
+  _AiAMapPlatformState({
     @required String unsupportedDescription,
   }) {
     //values
