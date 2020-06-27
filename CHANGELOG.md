@@ -1,3 +1,7 @@
+## [0.1.1]
+
+* Add: ios map
+
 ## [0.1.0]
 
 * Improve: Health

@@ -15,6 +15,13 @@ A new Flutter plugin about amap.
   s.source           = { :path => '.' }
   s.source_files = 'Classes/**/*'
   s.dependency 'Flutter'
+  # (https://lbs.amap.com/api/ios-sdk/guide/create-project/cocoapods)
+#  s.dependency 'AMap3DMap'
+#  s.dependency 'AMapSearch'
+#  s.dependency 'AMapLocation'
+  # （AMapNavi 已包含3D地图，无需单独引入3D地图）
+  s.dependency 'AMapNavi'
+  s.static_framework = true
   s.platform = :ios, '8.0'
 
   # Flutter.framework does not contain a i386 slice. Only x86_64 simulators are supported.
