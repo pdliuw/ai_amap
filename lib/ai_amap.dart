@@ -1,10 +1,7 @@
-///
-/// imports
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+library ai_amap;
 
 ///
-/// parts
-part 'ai_amap_widget.dart';
-
-part 'ai_amap_helper.dart';
+/// export
+export 'location/ai_amap_location_widget.dart';
+export 'ai_amap_helper.dart';
+export 'ai_amap_widget.dart';

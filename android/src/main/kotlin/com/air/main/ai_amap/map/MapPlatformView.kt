@@ -14,7 +14,7 @@ import io.flutter.plugin.platform.PlatformView
 
 /**
  * <p>
- * Created by air on 2020/6/24.
+ * @author air on 2019/10/29.
  * </p>
  */
 class MapPlatformView(binaryMessenger: BinaryMessenger, context: Context?, viewid: Int, args: Any?) : PlatformView {

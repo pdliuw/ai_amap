@@ -1,4 +1,4 @@
-package com.air.main.ai_amap.map
+package com.air.main.ai_amap.location
 
 import android.content.Context
 import io.flutter.plugin.common.BinaryMessenger
@@ -8,11 +8,11 @@ import io.flutter.plugin.platform.PlatformViewFactory
 
 /**
  * <p>
- * @author air on 2019/10/24.
+ * @author air on 2019/10/30.
  * </p>
  */
-class MapPlatformViewFactory(private var binaryMessenger: BinaryMessenger) : PlatformViewFactory(StandardMessageCodec.INSTANCE) {
+class MapLocationPlatformViewFactory(private var binaryMessenger: BinaryMessenger) : PlatformViewFactory(StandardMessageCodec.INSTANCE) {
     override fun create(context: Context?, viewId: Int, args: Any?): PlatformView {
-        return MapPlatformView(binaryMessenger, context, viewId, args);
+        return MapLocationPlatformView(binaryMessenger, context, viewId, args);
     }
 }

@@ -1,4 +1,4 @@
-part of 'ai_amap.dart';
+import 'package:flutter/material.dart';
 
 ///
 /// AiAMapPlatformWidget

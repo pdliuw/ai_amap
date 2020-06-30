@@ -1,6 +1,7 @@
 package com.air.main.ai_amap
 
 import androidx.annotation.NonNull;
+import com.air.main.ai_amap.location.MapLocationPlatformViewFactory
 import com.air.main.ai_amap.map.MapPlatformViewFactory
 
 import io.flutter.embedding.engine.plugins.FlutterPlugin
@@ -25,7 +26,8 @@ public class AiAmapPlugin : FlutterPlugin, MethodCallHandler {
         /*
         Register PlatformView
          */
-        flutterPluginBinding.platformViewRegistry.registerViewFactory("view_type_id_map_platform_view", MapPlatformViewFactory(flutterPluginBinding.binaryMessenger));
+        flutterPluginBinding.platformViewRegistry.registerViewFactory(GlobalConfig.VIEW_TYPE_ID_MAP_PLATFORM_VIEW, MapPlatformViewFactory(flutterPluginBinding.binaryMessenger));
+        flutterPluginBinding.platformViewRegistry.registerViewFactory(GlobalConfig.VIEW_TYPE_ID_MAP_LOCATION_PLATFORM_VIEW, MapLocationPlatformViewFactory(flutterPluginBinding.binaryMessenger));
     }
 
     // This static function is optional and equivalent to onAttachedToEngine. It supports the old
@@ -46,7 +48,8 @@ public class AiAmapPlugin : FlutterPlugin, MethodCallHandler {
             /*
             Register PlatformView
              */
-            registrar.platformViewRegistry().registerViewFactory("view_type_id_map_platform_view", MapPlatformViewFactory(registrar.messenger()));
+            registrar.platformViewRegistry().registerViewFactory(GlobalConfig.VIEW_TYPE_ID_MAP_PLATFORM_VIEW, MapPlatformViewFactory(registrar.messenger()));
+            registrar.platformViewRegistry().registerViewFactory(GlobalConfig.VIEW_TYPE_ID_MAP_LOCATION_PLATFORM_VIEW, MapLocationPlatformViewFactory(registrar.messenger()));
         }
     }
 

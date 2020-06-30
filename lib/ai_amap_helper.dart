@@ -1,4 +1,4 @@
-part of 'ai_amap.dart';
+import 'package:flutter/services.dart';
 
 class AiAMapHelper {
   ///

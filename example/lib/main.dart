@@ -14,6 +14,9 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  String _locationInfo = '--';
+
+  AiAMapLocationPlatformWidgetController _locationController;
   @override
   void initState() {
     super.initState();
@@ -45,8 +48,39 @@ class _MyAppState extends State<MyApp> {
         ),
         body: Column(
           children: [
+            Card(
+              child: ListTile(
+                title: Text("$_locationInfo"),
+              ),
+            ),
+            MaterialButton(
+              onPressed: () {
+                _locationController = AiAMapLocationPlatformWidgetController(
+                  locationResultTest: (String info, bool isSuccess) {
+                    setState(() {
+                      _locationInfo = info;
+                    });
+                  },
+                );
+                _locationController..startLocation();
+              },
+              child: Text("开始定位"),
+            ),
+            MaterialButton(
+              onPressed: () {
+                _locationController.stopLocation();
+              },
+              child: Text("停止定位"),
+            ),
             Expanded(
-              child: AiAMapPlatformWidget(),
+              child: AiAMapLocationPlatformWidget(
+                onPlatformViewCreatedCallback: (int id) {
+                  setState(() {
+                    _locationInfo = "创建完成";
+                  });
+                  ;
+                },
+              ),
             ),
           ],
         ),
