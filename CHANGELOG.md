@@ -1,3 +1,7 @@
+## [0.1.2]
+
+* Add: android location widget
+
 ## [0.1.1]
 
 * Add: ios map
