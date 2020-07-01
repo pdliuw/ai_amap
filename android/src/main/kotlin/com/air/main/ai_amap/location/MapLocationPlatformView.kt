@@ -2,8 +2,6 @@ package com.air.main.ai_amap.location
 
 import android.content.Context
 import android.view.View
-import android.view.ViewGroup
-import android.widget.TextView
 import com.air.main.ai_amap.GlobalConfig
 import com.amap.api.location.AMapLocationClient
 import com.amap.api.location.AMapLocationClientOption
@@ -18,6 +16,16 @@ import java.util.*
 /**
  * <p>
  * @author air on 2029/10/30.
+ * Include:
+ * 1、Basic map
+ * 2、Location
+ * 3、GeoFence
+ * 4、Location convert('GPS -> <- AMap -> <- BMap')
+ * and location judgment(the location whether is in The China)
+ * 5、Calculate distance
+ * </p>
+ * <p>
+ *
  * </p>
  */
 class MapLocationPlatformView(binaryMessenger: BinaryMessenger, context: Context?, viewid: Int, args: Any?) : PlatformView, MethodChannel.MethodCallHandler {
@@ -67,7 +75,7 @@ class MapLocationPlatformView(binaryMessenger: BinaryMessenger, context: Context
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
         //init location option
         initLocationOption();
-
+        
         when (call.method) {
             "recreateLocationService" -> {
                 recreateLocationService()
@@ -111,9 +119,11 @@ class MapLocationPlatformView(binaryMessenger: BinaryMessenger, context: Context
      * */
     private fun startLocation() {
 
-        if (aMapLocationClient.isStarted) {
-            //Location service already started,return
-            return;
+        //Location service already started,return
+        //本地定位服务是否已经启动，用于用户检查服务是否已经启动
+        if (!aMapLocationClient.isStarted) {
+            //如果未启动定位服务，则重新创建定位对象
+            recreateLocationService()
         }
 
         aMapLocationClient.apply {
@@ -189,9 +199,54 @@ class MapLocationPlatformView(binaryMessenger: BinaryMessenger, context: Context
         methodChannel.invokeMethod("startLocationResult", description);
     }
 
+    /**
+     * Show my location indicator
+     * If Show:
+     * if show my location indicator ,the map show my location with indicator,
+     * and my location always auto move to the center of the map.
+     *
+     * If hide:
+     * if hide my location indicator ,the map do not show my location with indicator,
+     * and my location do not auto move to the center of the map.
+     * */
     private fun showMyLocationIndicator(show: Boolean) {
-        mMapView.map.isMyLocationEnabled = true;
+        mMapView.map.isMyLocationEnabled = show;
     }
+//
+//    /**
+//     * Other location convert to amap location
+//     * Other location(BAIDU,
+//     * MAPBAR,
+//     * MAPABC,
+//     * SOSOMAP,
+//     * ALIYUN,
+//     * GOOGLE,
+//     * GPS)
+//     * convert to amap location,
+//     * */
+//    private fun convertToAMapLocation(sourceLatLng: DPoint): DPoint {
+//        val converter = CoordinateConverter(mContext);
+//        // CoordType.GPS 待转换坐标类型
+//        converter.from(CoordinateConverter.CoordType.GPS)
+//        // sourceLatLng待转换坐标点 DPoint类型
+//        converter.coord(sourceLatLng)
+//        // 执行转换操作
+//        return converter.convert();
+//    }
+//
+//    private fun isChina() {
+//        val converter = CoordinateConverter(mContext)
+//
+//        //返回true代表当前位置在大陆、港澳地区，反之不在。
+//        //返回true代表当前位置在大陆、港澳地区，反之不在。
+////        val isAMapDataAvailable: Boolean = converter.(latitude, longitude)
+//        //第一个参数为纬度，第二个为经度，纬度和经度均为高德坐标系。
+//    }
+//
+//    private fun distance() {
+////        DPoint startLatlng, DPoint endLatlng
+//        val coordinateConverter = CoordinateConverter(mContext);
+//    }
 
     private fun doNothing() {}
 }

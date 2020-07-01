@@ -53,7 +53,7 @@ class _State extends State<AiAMapLocationPlatformWidget> {
 class AiAMapLocationPlatformWidgetController {
   ///
   /// MethodChannel
-  MethodChannel methodChannel =
+  MethodChannel _methodChannel =
       MethodChannel(GlobalConfig.METHOD_CHANNEL_ID_MAP_LOCATION_PLATFORM_VIEW);
 
   LocationResultTest _locationTest;
@@ -63,7 +63,7 @@ class AiAMapLocationPlatformWidgetController {
     _locationTest = locationResultTest;
 
     //MethodChannel: 'android and ios' -> 'flutter'
-    methodChannel.setMethodCallHandler((MethodCall call) {
+    _methodChannel.setMethodCallHandler((MethodCall call) {
       String method = call.method;
 
       switch (method) {
@@ -79,34 +79,34 @@ class AiAMapLocationPlatformWidgetController {
   ///
   /// recreateLocationService
   recreateLocationService() {
-    methodChannel.invokeMethod("recreateLocationService");
+    _methodChannel.invokeMethod("recreateLocationService");
   }
 
   ///
   /// destroyLocationService
   destroyLocationService() {
-    methodChannel.invokeMethod("destroyLocationService");
+    _methodChannel.invokeMethod("destroyLocationService");
   }
 
   ///
   /// startLocation
   startLocation() {
-    methodChannel.invokeMethod("startLocation");
+    _methodChannel.invokeMethod("startLocation");
   }
 
   ///
   /// stopLocation
   stopLocation() {
-    methodChannel.invokeMethod("stopLocation");
+    _methodChannel.invokeMethod("stopLocation");
   }
 
   ///
   /// showMyLocationIndicator
   showMyLocationIndicator() {
-    methodChannel.invokeMethod("showMyLocationIndicator");
+    _methodChannel.invokeMethod("showMyLocationIndicator");
   }
 
   hideMyLocationIndicator() {
-    methodChannel.invokeMethod("hideMyLocationIndicator");
+    _methodChannel.invokeMethod("hideMyLocationIndicator");
   }
 }

@@ -84,5 +84,10 @@
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="0d3f471af8e82d9b0ed6006debbe9395" />
+        <!--
+        https://lbs.amap.com/api/android-location-sdk/guide/android-location/getlocation
+        (请在application标签中声明service组件,每个app拥有自己单独的定位service。)
+        -->
+        <service android:name="com.amap.api.location.APSService"></service>
     </application>
 </manifest>

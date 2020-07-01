@@ -16,27 +16,30 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   String _locationInfo = '--';
 
+  bool _enableMyLocation = false;
+  bool _onPlatformViewCreated = false;
+
   AiAMapLocationPlatformWidgetController _locationController;
+
   @override
   void initState() {
     super.initState();
-    initPlatformState();
+
+    _locationController = AiAMapLocationPlatformWidgetController(
+      locationResultTest: (String info, bool isSuccess) {
+        setState(() {
+          _locationInfo = info;
+        });
+      },
+    )..recreateLocationService();
   }
 
-  // Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> initPlatformState() async {
-    String platformVersion;
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    try {
-      platformVersion = await AiAMapHelper.platformVersion;
-    } on PlatformException {
-      platformVersion = 'Failed to get platform version.';
-    }
+  @override
+  void dispose() {
+    super.dispose();
 
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted) return;
+    _locationController.stopLocation();
+    _locationController.destroyLocationService();
   }
 
   @override
@@ -51,22 +54,29 @@ class _MyAppState extends State<MyApp> {
             Card(
               child: ListTile(
                 title: Text("$_locationInfo"),
+                trailing: _onPlatformViewCreated
+                    ? Switch(
+                        value: _enableMyLocation,
+                        onChanged: (enable) {
+                          setState(() {
+                            _enableMyLocation = enable;
+                            if (enable) {
+                              _locationController.showMyLocationIndicator();
+                            } else {
+                              _locationController.hideMyLocationIndicator();
+                            }
+                          });
+                        })
+                    : Text("Hello"),
               ),
             ),
-            MaterialButton(
+            FlatButton(
               onPressed: () {
-                _locationController = AiAMapLocationPlatformWidgetController(
-                  locationResultTest: (String info, bool isSuccess) {
-                    setState(() {
-                      _locationInfo = info;
-                    });
-                  },
-                );
                 _locationController..startLocation();
               },
               child: Text("开始定位"),
             ),
-            MaterialButton(
+            FlatButton(
               onPressed: () {
                 _locationController.stopLocation();
               },
@@ -76,6 +86,7 @@ class _MyAppState extends State<MyApp> {
               child: AiAMapLocationPlatformWidget(
                 onPlatformViewCreatedCallback: (int id) {
                   setState(() {
+                    _onPlatformViewCreated = true;
                     _locationInfo = "创建完成";
                   });
                   ;
