@@ -18,7 +18,7 @@ A new Flutter plugin about amap.
   # (https://lbs.amap.com/api/ios-sdk/guide/create-project/cocoapods)
 #  s.dependency 'AMap3DMap'
 #  s.dependency 'AMapSearch'
-#  s.dependency 'AMapLocation'
+  s.dependency 'AMapLocation'
   # （AMapNavi 已包含3D地图，无需单独引入3D地图）
   s.dependency 'AMapNavi'
   s.static_framework = true

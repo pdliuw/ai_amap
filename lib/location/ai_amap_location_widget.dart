@@ -7,13 +7,22 @@ typedef LocationResultTest = Function(
 
 ///
 /// AiAMapLocationPlatformWidget
+// ignore: must_be_immutable
 class AiAMapLocationPlatformWidget extends StatefulWidget {
-  PlatformViewCreatedCallback _onPlatformViewCreated;
+  ///
+  /// AiAMapLocationPlatformWidget controller.
+  AiAMapLocationPlatformWidgetController _platformWidgetController;
 
+  ///
+  /// AiAMapLocationPlatformWidget
   AiAMapLocationPlatformWidget({
-    PlatformViewCreatedCallback onPlatformViewCreatedCallback,
+    @required AiAMapLocationPlatformWidgetController platformWidgetController,
   }) {
-    this._onPlatformViewCreated = onPlatformViewCreatedCallback;
+    //assert
+    assert(platformWidgetController != null);
+
+    //Controller
+    _platformWidgetController = platformWidgetController;
   }
 
   @override
@@ -33,12 +42,14 @@ class _State extends State<AiAMapLocationPlatformWidget> {
     if (platform == TargetPlatform.android) {
       return AndroidView(
         viewType: GlobalConfig.VIEW_TYPE_ID_MAP_LOCATION_PLATFORM_VIEW,
-        onPlatformViewCreated: widget._onPlatformViewCreated,
+        onPlatformViewCreated:
+            widget._platformWidgetController.platformViewCreatedCallback,
       );
     } else if (platform == TargetPlatform.iOS) {
       return UiKitView(
         viewType: GlobalConfig.VIEW_TYPE_ID_MAP_LOCATION_PLATFORM_VIEW,
-        onPlatformViewCreated: widget._onPlatformViewCreated,
+        onPlatformViewCreated:
+            widget._platformWidgetController.platformViewCreatedCallback,
       );
     } else {
       return Container(
@@ -53,13 +64,28 @@ class _State extends State<AiAMapLocationPlatformWidget> {
 class AiAMapLocationPlatformWidgetController {
   ///
   /// MethodChannel
-  MethodChannel _methodChannel =
+  static const MethodChannel _methodChannel =
       MethodChannel(GlobalConfig.METHOD_CHANNEL_ID_MAP_LOCATION_PLATFORM_VIEW);
+
+  ///
+  /// PlatformViewCreatedCallback
+  PlatformViewCreatedCallback _platformViewCreatedCallback;
 
   LocationResultTest _locationTest;
 
-  AiAMapLocationPlatformWidgetController(
-      {String test, LocationResultTest locationResultTest}) {
+  ///
+  /// AiAMapLocationPlatformWidgetController
+  AiAMapLocationPlatformWidgetController({
+    @required PlatformViewCreatedCallback platformViewCreatedCallback,
+    String test,
+    LocationResultTest locationResultTest,
+  }) {
+    //assert
+    assert(platformViewCreatedCallback != null);
+
+    //platform view created callback
+    _platformViewCreatedCallback = platformViewCreatedCallback;
+
     _locationTest = locationResultTest;
 
     //MethodChannel: 'android and ios' -> 'flutter'
@@ -73,6 +99,19 @@ class AiAMapLocationPlatformWidgetController {
         default:
       }
       return null;
+    });
+  }
+
+  get platformViewCreatedCallback => this._platformViewCreatedCallback;
+
+  ///
+  /// setApiKey
+  /// Note: So far,just support ios,
+  /// if you want to set android api key,
+  /// please jump to 'AndroidManifest.xml' continue...
+  static void setApiKey({@required String apiKey}) {
+    _methodChannel.invokeMethod("setApiKey", {
+      "apiKey": apiKey,
     });
   }
 

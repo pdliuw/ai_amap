@@ -6,6 +6,7 @@ import com.air.main.ai_amap.GlobalConfig
 import com.amap.api.location.AMapLocationClient
 import com.amap.api.location.AMapLocationClientOption
 import com.amap.api.maps.MapView
+import com.amap.api.navi.model.AMapServiceAreaInfo
 import io.flutter.plugin.common.BinaryMessenger
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
@@ -77,6 +78,10 @@ class MapLocationPlatformView(binaryMessenger: BinaryMessenger, context: Context
         initLocationOption();
         
         when (call.method) {
+            "setApiKey"->{
+                val key:String? = call.argument("apiKey");
+                setApiKey(key);
+            }
             "recreateLocationService" -> {
                 recreateLocationService()
             }
@@ -111,6 +116,10 @@ class MapLocationPlatformView(binaryMessenger: BinaryMessenger, context: Context
             //
 
         }
+    }
+
+    private fun setApiKey(key:String?){
+        //todo
     }
 
     /**

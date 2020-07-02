@@ -1,12 +1,14 @@
 //
-//  AiAMapPlatformViewFactory.swift
+//  AiAMapLocationPlatformViewFactory.swift
 //  ai_amap
 //
-//  @author JamesAir on 2019/10/27.
+//  @author JamesAir on 2019/11/1.
 //
 
 import Foundation
-class AiAMapPlatformViewFactory:NSObject,FlutterPlatformViewFactory{
+import Flutter
+
+class AiAMapLocationPlatformViewFactory:NSObject,FlutterPlatformViewFactory{
     
     var binaryMessenger:FlutterBinaryMessenger;
     
@@ -16,6 +18,6 @@ class AiAMapPlatformViewFactory:NSObject,FlutterPlatformViewFactory{
     
     }
     func create(withFrame frame: CGRect, viewIdentifier viewId: Int64, arguments args: Any?) -> FlutterPlatformView {
-        return AiAMapPlatformView(flutterBinaryMessenger:binaryMessenger);
+        return AiAMapLocationPlatformView(flutterBinaryMessenger:binaryMessenger);
     }
 }

@@ -2,7 +2,7 @@
 //  AiAMapPlatformView.swift
 //  ai_amap
 //
-//  Created by JamesAir on 2020/6/27.
+//  @author JamesAir on 2019/10/27.
 //
 
 import Foundation

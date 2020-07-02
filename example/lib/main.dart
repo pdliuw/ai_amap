@@ -1,8 +1,6 @@
-import 'dart:async';
-
 import 'package:ai_amap/ai_amap.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 void main() {
   runApp(MyApp());
@@ -21,6 +19,8 @@ class _MyAppState extends State<MyApp> {
 
   AiAMapLocationPlatformWidgetController _locationController;
 
+  String _currentState = "";
+
   @override
   void initState() {
     super.initState();
@@ -31,7 +31,20 @@ class _MyAppState extends State<MyApp> {
           _locationInfo = info;
         });
       },
-    )..recreateLocationService();
+      platformViewCreatedCallback: (int id) {
+        setState(() {
+          //1、ApiKey
+          AiAMapLocationPlatformWidgetController.setApiKey(
+              apiKey: "c3e5689ab4b37aa36b56be87c5aa10b5");
+          //2、初始化定位服务
+          _locationController..recreateLocationService();
+
+          _onPlatformViewCreated = true;
+          _locationInfo = "创建完成";
+        });
+        ;
+      },
+    );
   }
 
   @override
@@ -70,9 +83,22 @@ class _MyAppState extends State<MyApp> {
                     : Text("Hello"),
               ),
             ),
+            Text("状态：$_currentState"),
+            FlatButton(
+                onPressed: () async {
+                  if (await Permission.locationAlways.request().isGranted) {
+                    // Either the permission was already granted before or the user just granted it.
+                    _currentState = "授权成功";
+                  } else {
+                    _currentState = "授权失败";
+                  }
+
+                  setState(() {});
+                },
+                child: Text("申请权限")),
             FlatButton(
               onPressed: () {
-                _locationController..startLocation();
+                _locationController.startLocation();
               },
               child: Text("开始定位"),
             ),
@@ -84,13 +110,7 @@ class _MyAppState extends State<MyApp> {
             ),
             Expanded(
               child: AiAMapLocationPlatformWidget(
-                onPlatformViewCreatedCallback: (int id) {
-                  setState(() {
-                    _onPlatformViewCreated = true;
-                    _locationInfo = "创建完成";
-                  });
-                  ;
-                },
+                platformWidgetController: _locationController,
               ),
             ),
           ],

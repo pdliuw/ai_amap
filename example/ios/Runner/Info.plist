@@ -22,6 +22,20 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>使用蓝牙</string>
+	<key>NSCameraUsageDescription</key>
+	<string>使用摄像头</string>
+	<key>NSFileProviderPresenceUsageDescription</key>
+	<string>使用文件</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>使用定位权限</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>需要定位权限</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>需要定位权限</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Photo</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
@@ -43,7 +57,5 @@
 	<false/>
 	<key>io.flutter.embedded_views_preview</key>
 	<true/>
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>使用定位权限</string>
 </dict>
 </plist>
