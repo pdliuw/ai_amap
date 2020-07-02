@@ -148,7 +148,7 @@ class AiAMapLocationPlatformView:NSObject,FlutterPlatformView,MAMapViewDelegate,
                 
                 if error.code == AMapLocationErrorCode.locateFailed.rawValue {
                     //定位错误：此时location和regeocode没有返回值，不进行annotation的添加
-                    NSLog("定位错误:{\(error.code) - \(error.localizedDescription)};")
+                    self?.sendLocationResult(message: "定位错误:{\(error.code) - \(error.localizedDescription)};")
                     return
                 }
                 else if error.code == AMapLocationErrorCode.reGeocodeFailed.rawValue
@@ -159,7 +159,7 @@ class AiAMapLocationPlatformView:NSObject,FlutterPlatformView,MAMapViewDelegate,
                     || error.code == AMapLocationErrorCode.cannotConnectToHost.rawValue {
                     
                     //逆地理错误：在带逆地理的单次定位中，逆地理过程可能发生错误，此时location有返回值，regeocode无返回值，进行annotation的添加
-                    NSLog("逆地理错误:{\(error.code) - \(error.localizedDescription)};")
+                    self?.sendLocationResult(message: "逆地理错误:{\(error.code) - \(error.localizedDescription)};")
                 }
                 else {
                     //没有错误：location有返回值，regeocode是否有返回值取决于是否进行逆地理操作，进行annotation的添加
@@ -175,7 +175,7 @@ class AiAMapLocationPlatformView:NSObject,FlutterPlatformView,MAMapViewDelegate,
             }
             
             //测试代码，还需要进一步修改
-            self?.sendLocationResult(message: "\(String(describing: location))")
+            self?.sendLocationResult(message: "结果：\(String(describing: location))")
         })
     }
     
@@ -186,6 +186,12 @@ class AiAMapLocationPlatformView:NSObject,FlutterPlatformView,MAMapViewDelegate,
     
     func showMyLocationIndicator(show :Bool){
         mapView.showsUserLocation = show;
+        mapView.userTrackingMode = MAUserTrackingMode.follow;
+        let r = MAUserLocationRepresentation();
+        r.showsHeadingIndicator = show;
+        r.showsAccuracyRing = show;
+        r.enablePulseAnnimation = show;
+        mapView.update(r);
     }
     
     

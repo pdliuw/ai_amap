@@ -66,7 +66,7 @@ class _MyAppState extends State<MyApp> {
           children: [
             Card(
               child: ListTile(
-                title: Text("$_locationInfo"),
+                title: Text("hello"),
                 trailing: _onPlatformViewCreated
                     ? Switch(
                         value: _enableMyLocation,
@@ -83,7 +83,7 @@ class _MyAppState extends State<MyApp> {
                     : Text("Hello"),
               ),
             ),
-            Text("状态：$_currentState"),
+            Text("状态：$_currentState ${_locationInfo}"),
             FlatButton(
                 onPressed: () async {
                   if (await Permission.locationAlways.request().isGranted) {
