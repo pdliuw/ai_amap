@@ -19,6 +19,8 @@ class _MyAppState extends State<MyApp> {
 
   AiAMapLocationPlatformWidgetController _locationController;
 
+  AiAMapLocationPlatformWidget _aMapWidget;
+
   String _currentState = "";
 
   @override
@@ -44,6 +46,10 @@ class _MyAppState extends State<MyApp> {
         });
         ;
       },
+    );
+
+    _aMapWidget = AiAMapLocationPlatformWidget(
+      platformWidgetController: _locationController,
     );
   }
 
@@ -109,9 +115,7 @@ class _MyAppState extends State<MyApp> {
               child: Text("停止定位"),
             ),
             Expanded(
-              child: AiAMapLocationPlatformWidget(
-                platformWidgetController: _locationController,
-              ),
+              child: _aMapWidget,
             ),
           ],
         ),

@@ -92,14 +92,12 @@ class AiAMapLocationPlatformWidgetController {
     _methodChannel.setMethodCallHandler((MethodCall call) {
       String method = call.method;
 
-      print(
-          "native -> flutter. method:${call.method}, arguments:${call.arguments.toString()}");
-
       switch (method) {
         case "startLocationResult":
-          _locationTest(
-              "${AiAMapLocationResult.convertFromNative(arguments: call.arguments).address}",
-              true);
+          var locationResult =
+              AiAMapLocationResult.convertFromNative(arguments: call.arguments);
+          print(locationResult.toString());
+          _locationTest("${locationResult.address}", true);
           break;
         default:
       }
@@ -398,7 +396,7 @@ class AiAMapLocationResult {
     _time = arguments['time'];
   }
 
-  String get string => _toString;
+  String get locationString => _toString;
 
   ///
   /// location detail
@@ -428,5 +426,46 @@ class AiAMapLocationResult {
 
   String get address {
     return _address;
+  }
+
+  @override
+  String toString() {
+    return '''
+    AiAMapLocationResult
+    {
+      _isLocationSuccessful: $_isLocationSuccessful
+      , _errorCode: $_errorCode
+      , _errorInfo: $_errorInfo
+      , _address: $_address
+      , _locationType: $_locationType
+      , _latitude: $_latitude
+      , _longitude: $_longitude
+      , _accuracy: $_accuracy
+      , _adCode: $_adCode
+      , _altitude: $_altitude
+      , _aoiName: $_aoiName
+      , _bearing: $_bearing
+      , _city: $_city
+      , _cityCode: $_cityCode
+      , _conScenario: $_conScenario
+      , _coordType: $_coordType
+      , _country: $_country
+      , _description: $_description
+      , _district: $_district
+      , _floor: $_floor
+      , _gpsAccuracyStatus: $_gpsAccuracyStatus
+      , _locationDetail: $_locationDetail
+      , _locationQualityReportAdviseMessage: $_locationQualityReportAdviseMessage
+      , _poiName: $_poiName
+      , _provider: $_provider
+      , _province: $_province
+      , _satellites: $_satellites
+      , _speed: $_speed
+      , _street: $_street
+      , _streetNum: $_streetNum
+      , _trustedLevel: $_trustedLevel
+      , _time: $_time
+    }
+    ''';
   }
 }
