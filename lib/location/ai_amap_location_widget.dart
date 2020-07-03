@@ -2,7 +2,7 @@ import 'package:ai_amap/global_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-typedef LocationResultTest = Function(
+typedef LocationResultCallback = Function(
     AiAMapLocationResult aiAMapLocationResult, bool locationSuccess);
 
 ///
@@ -71,14 +71,14 @@ class AiAMapLocationPlatformWidgetController {
   /// PlatformViewCreatedCallback
   PlatformViewCreatedCallback _platformViewCreatedCallback;
 
-  LocationResultTest _locationTest;
+  LocationResultCallback _locationCallback;
 
   ///
   /// AiAMapLocationPlatformWidgetController
   AiAMapLocationPlatformWidgetController({
     @required PlatformViewCreatedCallback platformViewCreatedCallback,
     String test,
-    LocationResultTest locationResultTest,
+    LocationResultCallback locationResultCallback,
   }) {
     //assert
     assert(platformViewCreatedCallback != null);
@@ -86,7 +86,7 @@ class AiAMapLocationPlatformWidgetController {
     //platform view created callback
     _platformViewCreatedCallback = platformViewCreatedCallback;
 
-    _locationTest = locationResultTest;
+    _locationCallback = locationResultCallback;
 
     //MethodChannel: 'android and ios' -> 'flutter'
     _methodChannel.setMethodCallHandler((MethodCall call) {
@@ -96,8 +96,8 @@ class AiAMapLocationPlatformWidgetController {
         case "startLocationResult":
           var locationResult =
               AiAMapLocationResult.convertFromNative(arguments: call.arguments);
-          print(locationResult.toString());
-          _locationTest(locationResult, true);
+
+          _locationCallback(locationResult, true);
           break;
         default:
       }
@@ -415,6 +415,14 @@ class AiAMapLocationResult {
     return _isLocationSuccessful;
   }
 
+  num get errorCode {
+    return _errorCode;
+  }
+
+  String get errorInfo {
+    return _errorInfo;
+  }
+
   ///
   /// 高德地图在定位成功后，会出现：
   /// 有"纬度、经度"却没有"地址、省市区信息"的情况，
@@ -426,6 +434,74 @@ class AiAMapLocationResult {
 
   String get address {
     return _address;
+  }
+
+  num get latitude {
+    return _latitude;
+  }
+
+  num get longitude {
+    return _longitude;
+  }
+
+  num get accuracy {
+    return _accuracy;
+  }
+
+  String get adCode {
+    return _adCode;
+  }
+
+  String get aoiName {
+    return _aoiName;
+  }
+
+  String get city {
+    return _city;
+  }
+
+  String get cityCode {
+    return _cityCode;
+  }
+
+  String get country {
+    return _country;
+  }
+
+  String get description {
+    return _description;
+  }
+
+  String get district {
+    return _district;
+  }
+
+  String get floor {
+    return _floor;
+  }
+
+  String get poiName {
+    return _poiName;
+  }
+
+  String get provider {
+    return _provider;
+  }
+
+  String get province {
+    return _province;
+  }
+
+  String get street {
+    return _street;
+  }
+
+  String get streetNum {
+    return _streetNum;
+  }
+
+  String get time {
+    return _time;
   }
 
   @override

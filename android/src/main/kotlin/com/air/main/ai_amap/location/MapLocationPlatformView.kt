@@ -145,7 +145,7 @@ class MapLocationPlatformView(binaryMessenger: BinaryMessenger, context: Context
 
                     //测试代码
                     methodChannel.invokeMethod("startLocationResult", mutableMapOf(
-                            Pair("isSuccess", successful),
+                            Pair("isLocationSuccessful", successful),
                             Pair("errorCode", it.errorCode),//获取错误码
                             Pair("errorInfo", it.errorInfo),//获取错误信息
                             Pair("address", it.address),//(需要网络通畅，第一次有可能没有地址信息返回）

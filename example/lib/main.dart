@@ -28,10 +28,10 @@ class _MyAppState extends State<MyApp> {
     super.initState();
 
     _locationController = AiAMapLocationPlatformWidgetController(
-      locationResultTest:
+      locationResultCallback:
           (AiAMapLocationResult locationResult, bool isSuccess) {
         setState(() {
-          _locationInfo = locationResult.address;
+          _locationInfo = "${locationResult.address}";
         });
       },
       platformViewCreatedCallback: (int id) {

@@ -113,8 +113,40 @@ class AiAMapLocationPlatformView:NSObject,FlutterPlatformView,MAMapViewDelegate,
     
     func amapLocationManager(_ manager: AMapLocationManager!, didUpdate location: CLLocation!) {
         NSLog("location:{lat:\(location.coordinate.latitude); lon:\(location.coordinate.longitude); accuracy:\(location.horizontalAccuracy)};");
-        
-    
+//
+//        let locationResultMap:[String:Any] = [
+//            "isLocationSuccessful":true,
+//            "address": reGeocode?.formattedAddress ?? "",
+//            "latitude": location?.coordinate.latitude ?? 0,
+//            "longitude": location?.coordinate.longitude ?? 0,
+//            "adCode": reGeocode?.adcode ?? "",
+//            "altitude": location?.altitude ?? 0,
+//            "aoiName":reGeocode?.aoiName ?? "",
+//            "bearing":0,
+//            "city":reGeocode?.city ?? "",
+//            "cityCode":reGeocode?.citycode ?? "",
+//            "conScenario":0,
+//            "coordType":"",
+//            "country":reGeocode?.country ?? "",
+//            "description":reGeocode?.description ?? "",
+//            "district":reGeocode?.district ?? "",
+//            "floor":location?.floor ?? "",
+//            "gpsAccuracyStatus":0,
+//            "locationDetail":"",
+//            "poiName":reGeocode?.poiName ?? "",
+//            "provider":"",
+//            "province":reGeocode?.province ?? "",
+//            "satellites":0,
+//            "speed":0,
+//            "street":reGeocode?.street ?? "",
+//            "streetNum":reGeocode?.number ?? "",
+//            "trustedLevel":0,
+//            "toString":"",
+//            "time":"\(String(describing: location?.timestamp))",
+//        ]
+//
+//        //测试代码，还需要进一步修改
+//        self?.methodChannel?.invokeMethod("startLocationResult", arguments: locationResultMap);
     }
     
     
@@ -141,15 +173,24 @@ class AiAMapLocationPlatformView:NSObject,FlutterPlatformView,MAMapViewDelegate,
     
     func startLocation(){
         
-        mAMapLocationManager.requestLocation(withReGeocode: false, completionBlock: { [weak self] (location: CLLocation?, reGeocode: AMapLocationReGeocode?, error: Error?) in
+        mAMapLocationManager.requestLocation(withReGeocode: true, completionBlock: { [weak self] (location: CLLocation?, reGeocode: AMapLocationReGeocode?, error: Error?) in
                     
+            //location whether successful
+            var isLocationSuccessful:Bool = true;
+            var errorCode = 0;
+            var errorInfo = "";
+            
             if let error = error {
                 let error = error as NSError
+                
+                //errorCode,errorInfo
+                errorCode = error.code;
+                errorInfo = error.localizedDescription;
                 
                 if error.code == AMapLocationErrorCode.locateFailed.rawValue {
                     //定位错误：此时location和regeocode没有返回值，不进行annotation的添加
                     self?.sendLocationResult(message: "定位错误:{\(error.code) - \(error.localizedDescription)};")
-                    return
+                    isLocationSuccessful = false;
                 }
                 else if error.code == AMapLocationErrorCode.reGeocodeFailed.rawValue
                     || error.code == AMapLocationErrorCode.timeOut.rawValue
@@ -159,10 +200,12 @@ class AiAMapLocationPlatformView:NSObject,FlutterPlatformView,MAMapViewDelegate,
                     || error.code == AMapLocationErrorCode.cannotConnectToHost.rawValue {
                     
                     //逆地理错误：在带逆地理的单次定位中，逆地理过程可能发生错误，此时location有返回值，regeocode无返回值，进行annotation的添加
-                    self?.sendLocationResult(message: "逆地理错误:{\(error.code) - \(error.localizedDescription)};")
+//                    self?.sendLocationResult(message: "逆地理错误:{\(error.code) - \(error.localizedDescription)};")
+                    isLocationSuccessful = false;
                 }
                 else {
                     //没有错误：location有返回值，regeocode是否有返回值取决于是否进行逆地理操作，进行annotation的添加
+                    isLocationSuccessful = true;
                 }
             }
             
@@ -171,11 +214,48 @@ class AiAMapLocationPlatformView:NSObject,FlutterPlatformView,MAMapViewDelegate,
             }
             
             if let reGeocode = reGeocode {
+            
                 NSLog("reGeocode:%@", reGeocode)
             }
             
+            
+            let locationResultMap:[String:Any] = [
+                "isLocationSuccessful" : isLocationSuccessful,
+                "errorCode": errorCode,
+                "errorInfo": errorInfo,
+                "address": reGeocode?.formattedAddress ?? "",
+                "latitude": location?.coordinate.latitude ?? 0,
+                "longitude": location?.coordinate.longitude ?? 0,
+                "accuracy": location?.horizontalAccuracy ?? 0,
+                "adCode": reGeocode?.adcode ?? "",
+                "altitude": location?.altitude ?? 0,
+                "aoiName":reGeocode?.aoiName ?? "",
+                "bearing":0,
+                "city":reGeocode?.city ?? "",
+                "cityCode":reGeocode?.citycode ?? "",
+                "conScenario":0,
+                "coordType":"",
+                "country":reGeocode?.country ?? "",
+                "description":reGeocode?.description ?? "",
+                "district":reGeocode?.district ?? "",
+                "floor":location?.floor ?? "",
+                "gpsAccuracyStatus":0,
+                "locationDetail":"",
+                "poiName":reGeocode?.poiName ?? "",
+                "provider":"",
+                "province":reGeocode?.province ?? "",
+                "satellites":0,
+                "speed":0,
+                "street":reGeocode?.street ?? "",
+                "streetNum":reGeocode?.number ?? "",
+                "trustedLevel":0,
+                "toString":"",
+                "time":"\(String(describing: location?.timestamp))",
+            ]
+            
             //测试代码，还需要进一步修改
-            self?.sendLocationResult(message: "结果：\(String(describing: location))")
+            self?.methodChannel?.invokeMethod("startLocationResult", arguments: locationResultMap);
+//            self?.sendLocationResult(message: "location信息：\(String(describing: location.))")
         })
     }
     
