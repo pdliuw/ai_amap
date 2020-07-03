@@ -1,3 +1,7 @@
+## [0.1.4]
+
+* Improve: code style and structure
+
 ## [0.1.3]
 
 * Add: ios location widget

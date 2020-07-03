@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 typedef LocationResultTest = Function(
-    String locationDescription, bool locationSuccess);
+    AiAMapLocationResult aiAMapLocationResult, bool locationSuccess);
 
 ///
 /// AiAMapLocationPlatformWidget
@@ -97,7 +97,7 @@ class AiAMapLocationPlatformWidgetController {
           var locationResult =
               AiAMapLocationResult.convertFromNative(arguments: call.arguments);
           print(locationResult.toString());
-          _locationTest("${locationResult.address}", true);
+          _locationTest(locationResult, true);
           break;
         default:
       }
