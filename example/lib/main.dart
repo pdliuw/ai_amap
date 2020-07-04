@@ -21,8 +21,6 @@ class _MyAppState extends State<MyApp> {
 
   AiAMapLocationPlatformWidget _aMapWidget;
 
-  String _currentState = "";
-
   @override
   void initState() {
     super.initState();
@@ -31,21 +29,14 @@ class _MyAppState extends State<MyApp> {
       locationResultCallback:
           (AiAMapLocationResult locationResult, bool isSuccess) {
         setState(() {
-          _locationInfo = "${locationResult.address}";
+          _locationInfo = "${locationResult.country}";
         });
       },
       platformViewCreatedCallback: (int id) {
         setState(() {
-          //1、ApiKey
-          AiAMapLocationPlatformWidgetController.setApiKey(
-              apiKey: "c3e5689ab4b37aa36b56be87c5aa10b5");
-          //2、初始化定位服务
-          _locationController..recreateLocationService();
-
           _onPlatformViewCreated = true;
-          _locationInfo = "创建完成";
+          requestPermission();
         });
-        ;
       },
     );
 
@@ -62,6 +53,18 @@ class _MyAppState extends State<MyApp> {
     _locationController.destroyLocationService();
   }
 
+  requestPermission() async {
+    if (await Permission.locationAlways.request().isGranted) {
+      // Either the permission was already granted before or the user just granted it.
+      //1、ApiKey
+      AiAMapLocationPlatformWidgetController.setApiKey(
+          apiKey: "c3e5689ab4b37aa36b56be87c5aa10b5");
+      //2、初始化定位服务
+      _locationController..recreateLocationService();
+      _locationController.startLocation();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -73,7 +76,7 @@ class _MyAppState extends State<MyApp> {
           children: [
             Card(
               child: ListTile(
-                title: Text("hello"),
+                title: Text("显示我的位置"),
                 trailing: _onPlatformViewCreated
                     ? Switch(
                         value: _enableMyLocation,
@@ -90,19 +93,7 @@ class _MyAppState extends State<MyApp> {
                     : Text("Hello"),
               ),
             ),
-            Text("状态：$_currentState ${_locationInfo}"),
-            FlatButton(
-                onPressed: () async {
-                  if (await Permission.locationAlways.request().isGranted) {
-                    // Either the permission was already granted before or the user just granted it.
-                    _currentState = "授权成功";
-                  } else {
-                    _currentState = "授权失败";
-                  }
-
-                  setState(() {});
-                },
-                child: Text("申请权限")),
+            Text("${_locationInfo ?? '定位中....'}"),
             FlatButton(
               onPressed: () {
                 _locationController.startLocation();
