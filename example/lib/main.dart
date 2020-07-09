@@ -29,8 +29,15 @@ class _MyAppState extends State<MyApp> {
       locationResultCallback:
           (AiAMapLocationResult locationResult, bool isSuccess) {
         setState(() {
+          print("${locationResult.locationString}");
           _locationInfo = "${locationResult.country}";
         });
+      },
+      geoFenceFinishResultCallback: (GeoFenceFinishedResult result) {
+        print("添加地理围栏：\n${result.toString()}");
+      },
+      geoFenceReceiveResultCallback: (GeoFenceReceiveResult result) {
+        print("触发地理围栏：\n${result.toString()}");
       },
       platformViewCreatedCallback: (int id) {
         setState(() {
@@ -62,6 +69,14 @@ class _MyAppState extends State<MyApp> {
       //2、初始化定位服务
       _locationController..recreateLocationService();
       _locationController.startLocation();
+
+      _locationController.recreateGeoFenceClient();
+      //默认设置：北京锋创科技园的经纬度地址
+      _locationController.addGeoFence(
+          latitude: 39.780718,
+          longitude: 116.56848,
+          radius: 500,
+          customId: "定制化的业务自定义ID");
     }
   }
 

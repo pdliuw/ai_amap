@@ -1,17 +1,24 @@
 package com.air.main.ai_amap.location
 
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import android.net.ConnectivityManager
+import android.os.Bundle
 import android.view.View
 import com.air.main.ai_amap.GlobalConfig
+import com.amap.api.fence.GeoFence
+import com.amap.api.fence.GeoFenceClient
+import com.amap.api.fence.GeoFenceListener
 import com.amap.api.location.AMapLocationClient
 import com.amap.api.location.AMapLocationClientOption
+import com.amap.api.location.DPoint
 import com.amap.api.maps.MapView
 import io.flutter.plugin.common.BinaryMessenger
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.platform.PlatformView
-import java.text.SimpleDateFormat
-import java.util.*
 
 /**
  * <p>
@@ -28,7 +35,7 @@ import java.util.*
  *
  * </p>
  */
-class MapLocationPlatformView(binaryMessenger: BinaryMessenger, context: Context?, viewid: Int, args: Any?) : PlatformView, MethodChannel.MethodCallHandler {
+class MapLocationPlatformView(binaryMessenger: BinaryMessenger, context: Context?, viewid: Int, args: Any?) : PlatformView, MethodChannel.MethodCallHandler, GeoFenceListener, BroadcastReceiver() {
 
     /** Context */
     private val mContext = context;
@@ -44,6 +51,9 @@ class MapLocationPlatformView(binaryMessenger: BinaryMessenger, context: Context
 
     /** Location Option */
     private var mLocationClientOption: AMapLocationClientOption = AMapLocationClientOption();
+
+    /** GeoFence client */
+    private var mGeoFenceClient: GeoFenceClient = GeoFenceClient(mContext?.applicationContext);
 
     /** Init */
     init {
@@ -98,6 +108,23 @@ class MapLocationPlatformView(binaryMessenger: BinaryMessenger, context: Context
             }
             "hideMyLocationIndicator" -> {
                 showMyLocationIndicator(false);
+            }
+            "recreateGeoFenceClient" -> {
+                recreateGeoFenceClient();
+            }
+            "addGeoFence" -> {
+                val latitude: Double = call.argument("latitude")!!;
+                val longitude: Double = call.argument("longitude")!!;
+                val radiusDoubleType: Double = call.argument("radius")!!;
+                val radius: Float = radiusDoubleType.toFloat();
+                val customId: String = call.argument("customId")!!;
+                addGeoFence(latitude = latitude, longitude = longitude, radius = radius, customId = customId);
+            }
+            "clearAllGeoFence" -> {
+                clearAllGeoFence();
+            }
+            "destroyGeoFenceClient" -> {
+                destroyGeoFenceClient();
             }
             else -> {
                 doNothing();
@@ -284,6 +311,148 @@ class MapLocationPlatformView(binaryMessenger: BinaryMessenger, context: Context
 ////        DPoint startLatlng, DPoint endLatlng
 //        val coordinateConverter = CoordinateConverter(mContext);
 //    }
+    /**
+     * Create geoFence client service
+     * 创建地理围栏对象
+     * @see [destroyGeoFenceClient]
+     */
+    private fun recreateGeoFenceClient() {
+        //实例化地理围栏客户端
+        mGeoFenceClient = GeoFenceClient(mContext?.applicationContext);
+        //
+        mGeoFenceClient.setGeoFenceListener(this);
+        //创建并设置PendingIntent
+        mGeoFenceClient.createPendingIntent(GEOFENCE_BROADCAST_ACTION);
+        //注册接收地理围栏的消息
+        registerGeoFenceBroadcast();
+    }
 
-    private fun doNothing() {}
+    /**
+     * 当不再需要使用围栏时，可以调用以下代码对已经设定的围栏进行清除操作。
+     */
+    private fun clearAllGeoFence() {
+        mGeoFenceClient.removeGeoFence();
+    }
+
+    /**
+     *
+     * @see [recreateGeoFenceClient]
+     */
+    private fun destroyGeoFenceClient() {
+
+    }
+
+    private fun addGeoFence(latitude: Double, longitude: Double, radius: Float, customId: String) {
+        //设置希望侦测的围栏触发行为，默认只侦测用户进入围栏的行为
+        //public static final int GEOFENCE_IN 进入地理围栏
+        //public static final int GEOFENCE_OUT 退出地理围栏
+        //public static final int GEOFENCE_STAYED 停留在地理围栏内10分钟
+        mGeoFenceClient.setActivateAction(GeoFenceClient.GEOFENCE_IN);
+        //point:围栏中心点
+        //radius:要创建的围栏半径 ，半径无限制，单位米
+        //customId:与围栏关联的自有业务Id
+        var centerPoint: DPoint = DPoint();
+        //设置中心点纬度
+        centerPoint.latitude = latitude;
+        //设置中心点经度
+        centerPoint.longitude = longitude;
+
+        mGeoFenceClient.addGeoFence(centerPoint, radius, customId);
+    }
+
+    //定义接收广播的action字符串
+    val GEOFENCE_BROADCAST_ACTION = "com.air.main.ai_amap.location.geoFence.broadcast"
+
+    private fun doNothing() {
+        //empty function
+        //do nothing function
+        //please do not add anything in this body
+    }
+
+    /**
+     * 围栏创建完毕的信息会通过 GeoFenceListener 进行回调。可以在回调中知道创建围栏成功与否，以及查看所创建围栏的具体内容。
+     */
+    override fun onGeoFenceCreateFinished(geoFenceList: List<GeoFence?>?, errorCode: Int, customId: String?) {
+
+        var isAddGeoFenceSuccess: Boolean = false;
+        var errorInfo: String;
+        if (errorCode == GeoFence.ADDGEOFENCE_SUCCESS) {
+            isAddGeoFenceSuccess = true;
+            errorInfo = "添加围栏成功";
+            //geoFenceList是已经添加的围栏列表，可据此查看创建的围栏
+        } else {
+            isAddGeoFenceSuccess = false;
+            errorInfo = "添加围栏失败";
+        }
+
+
+        methodChannel.invokeMethod("addGeoFenceFinished", mutableMapOf(
+                Pair("isAddGeoFenceSuccess", isAddGeoFenceSuccess),//判断围栏是否创建成功
+                Pair("errorCode", errorCode),//获取错误码
+                Pair("errorInfo", errorInfo)//获取错误信息
+        ));
+    }
+
+    /**
+     * 注册接收地理围栏触发广播
+     */
+    private fun registerGeoFenceBroadcast() {
+        val filter = IntentFilter(
+                ConnectivityManager.CONNECTIVITY_ACTION)
+        filter.addAction(GEOFENCE_BROADCAST_ACTION)
+        mContext?.registerReceiver(this, filter)
+    }
+
+    /**
+     * 创建广播监听
+     */
+    override fun onReceive(context: Context?, intent: Intent?) {
+        if (intent != null) {
+            val action: String? = intent.action;
+            if (action != null) {
+                if (GEOFENCE_BROADCAST_ACTION == action) {
+                    //解析广播内容
+                    //获取Bundle
+                    val bundle: Bundle? = intent.extras;
+
+                    //解析数据
+                    if (bundle != null) {
+
+                        //获取围栏行为：
+                        val status: Int = bundle.getInt(GeoFence.BUNDLE_KEY_FENCESTATUS)
+                        //获取自定义的围栏标识：
+                        val customId: String? = bundle.getString(GeoFence.BUNDLE_KEY_CUSTOMID)
+                        //获取围栏ID:
+                        val fenceId: String? = bundle.getString(GeoFence.BUNDLE_KEY_FENCEID)
+                        //获取当前有触发的围栏对象：
+                        val fence: GeoFence? = bundle.getParcelable(GeoFence.BUNDLE_KEY_FENCE)
+
+                        val locationErrorCode: Int = bundle.getInt(GeoFence.BUNDLE_KEY_LOCERRORCODE);
+
+                        if (status == GeoFence.STATUS_IN) {
+                            //进入
+                        } else if (status == GeoFence.STATUS_OUT) {
+                            //离开
+                        } else if (status == GeoFence.STATUS_STAYED) {
+                            //停留
+                        } else {
+                            //默认
+                            doNothing();
+                        }
+
+                        methodChannel.invokeMethod("startGeoFenceReceiverResult", mutableMapOf(
+                                Pair("status", status),//获取围栏行为：
+                                Pair("customId", customId),//获取自定义的围栏标识：
+                                Pair("fenceId", fenceId)//获取围栏ID:
+                        ));
+
+                    }
+                }
+            }
+
+        }
+
+    }
+
+
 }
