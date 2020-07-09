@@ -191,6 +191,10 @@ class AiAMapLocationPlatformWidgetController {
     _methodChannel.invokeMethod("recreateGeoFenceClient");
   }
 
+  startNavigatorWidget() {
+    _methodChannel.invokeMethod("startNavigatorWidget");
+  }
+
   addGeoFence({
     @required double latitude,
     @required double longitude,

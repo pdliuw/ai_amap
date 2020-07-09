@@ -121,6 +121,12 @@ class _MyAppState extends State<MyApp> {
               },
               child: Text("停止定位"),
             ),
+            FlatButton(
+              onPressed: () {
+                _locationController.startNavigatorWidget();
+              },
+              child: Text("启动导航组件"),
+            ),
             Expanded(
               child: _aMapWidget,
             ),
