@@ -14,7 +14,7 @@ import UIKit
 
 //
 //  AiAMapLocationPlatformView
-class AiAMapLocationPlatformView:NSObject,FlutterPlatformView,MAMapViewDelegate, AMapLocationManagerDelegate,AMapNaviCompositeManagerDelegate{
+class AiAMapLocationPlatformView:NSObject,FlutterPlatformView,MAMapViewDelegate, AMapLocationManagerDelegate,AMapGeoFenceManagerDelegate,AMapNaviCompositeManagerDelegate{
     
     // MethodChannel
     var methodChannel:FlutterMethodChannel?;
@@ -26,6 +26,8 @@ class AiAMapLocationPlatformView:NSObject,FlutterPlatformView,MAMapViewDelegate,
     
     // Location Manager
     var mAMapLocationManager:AMapLocationManager = AMapLocationManager.init();
+    //GeoFence Manager
+    var mAMapGeoFenceManager:AMapGeoFenceManager = AMapGeoFenceManager.init();
     
     init(flutterBinaryMessenger : FlutterBinaryMessenger) {
         
@@ -93,6 +95,19 @@ class AiAMapLocationPlatformView:NSObject,FlutterPlatformView,MAMapViewDelegate,
             case "hideMyLocationIndicator":
                 //hide my location indicator
                 self.showMyLocationIndicator(show:false);
+                break;
+            case "recreateGeoFenceClient":
+                self.recreateGeoFenceClient();
+                break;
+            case "addGeoFence":
+                let latitude: Double = arg?["latitude"] as! Double;
+                let longitude: Double = arg?["longitude"] as! Double;
+                let radiusDoubleType: Double = arg?["radius"] as! Double;
+                let customId: String = arg?["customId"] as! String;
+                self.addGeoFence(latitude: latitude, longitude: longitude, radius: radiusDoubleType, customId: customId);
+                break;
+            case "clearAllGeoFence":
+                self.clearAllGeoFence();
                 break;
             case "startNavigatorWidget":
                 self.showAMapNavigatorPage();
@@ -288,11 +303,85 @@ class AiAMapLocationPlatformView:NSObject,FlutterPlatformView,MAMapViewDelegate,
         methodChannel?.invokeMethod("startLocationResult", arguments: message);
     }
     
+    func recreateGeoFenceClient(){
+        self.mAMapGeoFenceManager = AMapGeoFenceManager()
+        self.mAMapGeoFenceManager.delegate = self
+        
+    }
+    
+    func addGeoFence(latitude: Double, longitude: Double, radius: Double, customId: String){
+        //进入，离开，停留都要进行通知
+        self.mAMapGeoFenceManager.activeAction = [AMapGeoFenceActiveAction.inside, AMapGeoFenceActiveAction.outside, AMapGeoFenceActiveAction.stayed]
+        //允许后台定位
+        self.mAMapGeoFenceManager.allowsBackgroundLocationUpdates = true
+        
+        
+        let coordinate = CLLocationCoordinate2DMake(latitude, longitude);
+        self.mAMapGeoFenceManager.addCircleRegionForMonitoring(withCenter: coordinate, radius: radius, customID: customId);
+
+    }
+    
     func showAMapNavigatorPage(){
         let naviManager = AMapNaviCompositeManager.init();
         naviManager.delegate = self;
         naviManager.presentRoutePlanViewController(withOptions: nil);
     }
     
+    func amapGeoFenceManager(_ manager: AMapGeoFenceManager!, didAddRegionForMonitoringFinished regions: [AMapGeoFenceRegion]!, customID: String!, error: Error!) {
+        
+        var isAddGeoFenceSuccess: Bool = false;
+        var errorCode:Int;
+        var errorInfo: String;
+        
+
+        if let error = error {
+            isAddGeoFenceSuccess = false;
+            let error = error as NSError
+            errorCode = error.code
+            errorInfo = "添加围栏失败";
+        }
+        else {
+            isAddGeoFenceSuccess = true;
+            errorCode = 0;
+            errorInfo = "添加围栏成功";
+        }
+        let geoFenceFinishedMap:[String:Any] = [
+            "isAddGeoFenceSuccess":isAddGeoFenceSuccess,
+            "errorCode":errorCode
+        ];
+        self.methodChannel?.invokeMethod("addGeoFenceFinished", arguments: geoFenceFinishedMap);
+    }
+    
+    func amapGeoFenceManager(_ manager: AMapGeoFenceManager!, didGeoFencesStatusChangedFor region: AMapGeoFenceRegion!, customID: String!, error: Error!) {
+        
+        
+        
+        if error == nil {
+            
+            print("status changed \(region.description)")
+            
+            
+            let geoFenceResultMap:[String:Any] = [
+                "status":region.fenceStatus.rawValue,
+                "customId":region.customID ?? "",
+                "fenceId":region.identifier ?? "",//AMapGeoFenceRegion的唯一标识符
+            ];
+            
+            self.methodChannel?.invokeMethod("startGeoFenceReceiverResult", arguments: geoFenceResultMap);
+            
+            
+            
+        } else {
+            print("status changed error \(String(describing: error))")
+        }
+        
+        
+    }
+    
+    func clearAllGeoFence(){
+        
+        mAMapGeoFenceManager.removeAllGeoFenceRegions();
+        
+    }
 }
 

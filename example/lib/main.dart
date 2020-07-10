@@ -29,7 +29,7 @@ class _MyAppState extends State<MyApp> {
       locationResultCallback:
           (AiAMapLocationResult locationResult, bool isSuccess) {
         setState(() {
-          print("${locationResult.locationString}");
+          print("定位成功：${locationResult.haveAddress()},${locationResult.latitude},${locationResult.longitude}");
           _locationInfo = "${locationResult.country}";
         });
       },
