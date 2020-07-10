@@ -1,3 +1,7 @@
+## [0.1.8]
+
+* add: geoFence
+
 ## [0.1.7]
 
 * add: navi
