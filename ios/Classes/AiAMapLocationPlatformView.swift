@@ -14,7 +14,7 @@ import UIKit
 
 //
 //  AiAMapLocationPlatformView
-class AiAMapLocationPlatformView:NSObject,FlutterPlatformView,MAMapViewDelegate, AMapLocationManagerDelegate{
+class AiAMapLocationPlatformView:NSObject,FlutterPlatformView,MAMapViewDelegate, AMapLocationManagerDelegate,AMapNaviCompositeManagerDelegate{
     
     // MethodChannel
     var methodChannel:FlutterMethodChannel?;
@@ -93,6 +93,9 @@ class AiAMapLocationPlatformView:NSObject,FlutterPlatformView,MAMapViewDelegate,
             case "hideMyLocationIndicator":
                 //hide my location indicator
                 self.showMyLocationIndicator(show:false);
+                break;
+            case "startNavigatorWidget":
+                self.showAMapNavigatorPage();
                 break;
             default:
                 result("method:\(call.method) not implement");
@@ -283,6 +286,12 @@ class AiAMapLocationPlatformView:NSObject,FlutterPlatformView,MAMapViewDelegate,
     // Send location result ("ios -> flutter")
     func sendLocationResult(message:String?){
         methodChannel?.invokeMethod("startLocationResult", arguments: message);
+    }
+    
+    func showAMapNavigatorPage(){
+        let naviManager = AMapNaviCompositeManager.init();
+        naviManager.delegate = self;
+        naviManager.presentRoutePlanViewController(withOptions: nil);
     }
     
 }
