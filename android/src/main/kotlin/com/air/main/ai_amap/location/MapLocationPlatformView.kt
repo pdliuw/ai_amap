@@ -18,7 +18,6 @@ import com.amap.api.maps.MapView
 import com.amap.api.navi.AMapNavi
 import com.amap.api.navi.AmapNaviPage
 import com.amap.api.navi.AmapNaviParams
-import com.amap.api.navi.INaviInfoCallback
 import io.flutter.plugin.common.BinaryMessenger
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
@@ -130,8 +129,8 @@ class MapLocationPlatformView(binaryMessenger: BinaryMessenger, context: Context
             "destroyGeoFenceClient" -> {
                 destroyGeoFenceClient();
             }
-            "startNavigatorWidget"->{
-                showAMapNavigatorPage();   
+            "startNavigatorWidget" -> {
+                showAMapNavigatorPage();
             }
             else -> {
                 doNothing();
@@ -465,7 +464,7 @@ class MapLocationPlatformView(binaryMessenger: BinaryMessenger, context: Context
      * 直接跳转到导航页面
      * 起始点、途经点、重点由用户手动选择
      */
-    private fun showAMapNavigatorPage(){
+    private fun showAMapNavigatorPage() {
         //可通过AMapNavi.setUseInnerVoice(true) 开启内置语音功能
         AMapNavi.getInstance(mContext).setUseInnerVoice(true);
         AmapNaviPage.getInstance().showRouteActivity(mContext, AmapNaviParams(null), null);
