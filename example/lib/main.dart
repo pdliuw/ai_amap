@@ -6,6 +6,8 @@ void main() {
   runApp(MyApp());
 }
 
+///
+/// 内嵌高德地图导航组件时，首次启动app进入导航页面时，没有导航声音；请重启app后再次进入，才有导航声音
 class MyApp extends StatefulWidget {
   @override
   _MyAppState createState() => _MyAppState();
@@ -29,7 +31,8 @@ class _MyAppState extends State<MyApp> {
       locationResultCallback:
           (AiAMapLocationResult locationResult, bool isSuccess) {
         setState(() {
-          print("定位成功：${locationResult.haveAddress()},${locationResult.latitude},${locationResult.longitude}");
+          print(
+              "定位成功：${locationResult.haveAddress()},${locationResult.latitude},${locationResult.longitude}");
           _locationInfo = "${locationResult.country}";
         });
       },

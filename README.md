@@ -7,6 +7,10 @@
 |[English Document](https://github.com/pdliuw/ai_amap/blob/master/README_EN.md)|[中文文档](https://github.com/pdliuw/ai_amap)|
 |:-|:-|
 
+## 注意：
+
+内嵌高德地图导航组件时，首次启动app进入导航页面时，没有导航声音；请重启app后再次进入，才有导航声音
+
 ## Effect
 
 |iOS-map|Android-map|
