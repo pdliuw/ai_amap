@@ -1,3 +1,10 @@
+## [0.1.9]
+
+* Update: example model
+
+1. fix something,
+2. improve health,
+
 ## [0.1.8]
 
 * add: geoFence

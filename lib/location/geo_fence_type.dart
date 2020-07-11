@@ -1,7 +1,7 @@
 ///
 /// GeoFenceType
 class GeoFenceType {
-  final int GEOFENCE_IN = 1;
-  final int GEOFENCE_OUT = 2;
-  final int GEOFENCE_STAYED = 4;
+  static const int GEO_FENCE_IN = 1;
+  static const int GEO_FENCE_OUT = 2;
+  static const int GEO_FENCE_STAYED = 4;
 }
