@@ -65,21 +65,27 @@ class _MyAppState extends State<MyApp> {
 
   requestPermission() async {
     if (await Permission.locationAlways.request().isGranted) {
-      // Either the permission was already granted before or the user just granted it.
-      //1、ApiKey
-      AiAMapLocationPlatformWidgetController.setApiKey(
-          apiKey: "c3e5689ab4b37aa36b56be87c5aa10b5");
-      //2、初始化定位服务
-      _locationController..recreateLocationService();
-      _locationController.startLocation();
+      if (await Permission.storage.request().isGranted) {
+        if (await Permission.phone.request().isGranted) {
+          if (await Permission.microphone.request().isGranted) {
+            // Either the permission was already granted before or the user just granted it.
+            //1、ApiKey
+            AiAMapLocationPlatformWidgetController.setApiKey(
+                apiKey: "c3e5689ab4b37aa36b56be87c5aa10b5");
+            //2、初始化定位服务
+            _locationController..recreateLocationService();
+            _locationController.startLocation();
 
-      _locationController.recreateGeoFenceClient();
-      //默认设置：北京锋创科技园的经纬度地址
-      _locationController.addGeoFence(
-          latitude: 39.780718,
-          longitude: 116.56848,
-          radius: 500,
-          customId: "定制化的业务自定义ID");
+            _locationController.recreateGeoFenceClient();
+            //默认设置：北京锋创科技园的经纬度地址
+            _locationController.addGeoFence(
+                latitude: 39.780718,
+                longitude: 116.56848,
+                radius: 500,
+                customId: "定制化的业务自定义ID");
+          }
+        }
+      }
     }
   }
 
