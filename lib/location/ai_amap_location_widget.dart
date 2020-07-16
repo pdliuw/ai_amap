@@ -154,6 +154,35 @@ class AiAMapLocationPlatformWidgetController {
   }
 
   ///
+  /// Add marker on map
+  /// title: marker title
+  /// snippet: marker snippet/content
+  addMarker({
+    @required double latitude,
+    @required double longitude,
+    @required String title,
+    @required String snippet,
+  }) {
+    _methodChannel.invokeMethod("addMarker", {
+      "latitude": latitude,
+      "longitude": longitude,
+      "title": title,
+      "snippet": snippet,
+    });
+  }
+
+  ///
+  /// Clear all overlay of map（marker，circle，polyline...),
+  /// but myLocationOverlay（location overlay）exclude。
+  clearAllOverlay({
+    bool isKeepMyLocationOverlay = true,
+  }) {
+    _methodChannel.invokeMethod("clearAllOverlay", {
+      "isKeepMyLocationOverlay": isKeepMyLocationOverlay,
+    });
+  }
+
+  ///
   /// recreateLocationService
   recreateLocationService() {
     _methodChannel.invokeMethod("recreateLocationService");

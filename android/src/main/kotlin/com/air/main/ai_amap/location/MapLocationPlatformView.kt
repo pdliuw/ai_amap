@@ -15,6 +15,8 @@ import com.amap.api.location.AMapLocationClient
 import com.amap.api.location.AMapLocationClientOption
 import com.amap.api.location.DPoint
 import com.amap.api.maps.MapView
+import com.amap.api.maps.model.LatLng
+import com.amap.api.maps.model.MarkerOptions
 import com.amap.api.navi.AMapNavi
 import com.amap.api.navi.AmapNaviPage
 import com.amap.api.navi.AmapNaviParams
@@ -22,6 +24,7 @@ import io.flutter.plugin.common.BinaryMessenger
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.platform.PlatformView
+
 
 /**
  * <p>
@@ -97,6 +100,17 @@ class MapLocationPlatformView(binaryMessenger: BinaryMessenger, context: Context
                 val key: String? = call.argument("apiKey");
                 setApiKey(key);
             }
+            "addMarker" -> {
+                val latitude: Double = call.argument("latitude")!!;
+                val longitude: Double = call.argument("longitude")!!;
+                val title: String = call.argument("title")!!;
+                val snippet: String = call.argument("snippet")!!;
+                addMarker(latitude = latitude, longitude = longitude, title = title, snippet = snippet);
+            }
+            "clearAllOverlay" -> {
+                val isKeepMyLocationOverlay: Boolean = call.argument("isKeepMyLocationOverlay")!!;
+                clearAllOverlay(isKeepMyLocationOverlay = isKeepMyLocationOverlay);
+            }
             "recreateLocationService" -> {
                 recreateLocationService()
             }
@@ -155,6 +169,26 @@ class MapLocationPlatformView(binaryMessenger: BinaryMessenger, context: Context
 
     private fun setApiKey(key: String?) {
         //todo
+    }
+
+    private fun addMarker(latitude: Double, longitude: Double, title: String, snippet: String) {
+        //LatLng(latitude, longitude,isCheck);
+        //如果构造的LatLng数量大于2000，建议将isCheck设为false关闭检查功能。
+        //isCheck - 是否需要检查经纬度的合法性，建议填写true 如果设为true，传入的经纬度不合理，会打印错误日志进行提示，然后转换为接近的合理的经纬度。
+        val latLng = LatLng(latitude, longitude);
+        mMapView.apply {
+            map.addMarker(MarkerOptions().position(latLng).title(title).snippet(snippet));
+        }
+    }
+
+    /**
+     * Clear all overlay of map（marker，circle，polyline...),
+     * but myLocationOverlay（location overlay）exclude。
+     */
+    private fun clearAllOverlay(isKeepMyLocationOverlay: Boolean) {
+        mMapView.apply {
+            map.clear(isKeepMyLocationOverlay);
+        }
     }
 
     /**
