@@ -70,6 +70,9 @@ class MapLocationPlatformView(binaryMessenger: BinaryMessenger, context: Context
         mMapView.let {
             mMapView.onCreate(null);
             mMapView.onResume();
+            mMapView.map.uiSettings.apply {
+                isCompassEnabled = true;
+            }
         }
 
 
