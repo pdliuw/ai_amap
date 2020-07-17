@@ -4,18 +4,22 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.icu.text.IDNA
 import android.net.ConnectivityManager
 import android.os.Bundle
 import android.view.View
 import com.air.main.ai_amap.GlobalConfig
+import com.air.main.ai_amap.custom.InfoWindowAdapter
 import com.amap.api.fence.GeoFence
 import com.amap.api.fence.GeoFenceClient
 import com.amap.api.fence.GeoFenceListener
 import com.amap.api.location.AMapLocationClient
 import com.amap.api.location.AMapLocationClientOption
 import com.amap.api.location.DPoint
+import com.amap.api.maps.AMap
 import com.amap.api.maps.MapView
 import com.amap.api.maps.model.LatLng
+import com.amap.api.maps.model.Marker
 import com.amap.api.maps.model.MarkerOptions
 import com.amap.api.navi.AMapNavi
 import com.amap.api.navi.AmapNaviPage
@@ -41,7 +45,7 @@ import io.flutter.plugin.platform.PlatformView
  *
  * </p>
  */
-class MapLocationPlatformView(binaryMessenger: BinaryMessenger, context: Context?, viewid: Int, args: Any?) : PlatformView, MethodChannel.MethodCallHandler, GeoFenceListener, BroadcastReceiver() {
+class MapLocationPlatformView(binaryMessenger: BinaryMessenger, context: Context?, viewid: Int, args: Any?) : PlatformView, MethodChannel.MethodCallHandler, GeoFenceListener, BroadcastReceiver(), AMap.OnMarkerClickListener, InfoWindowAdapter.OnConfirmListener {
 
     /** Context */
     private val mContext = context;
@@ -61,6 +65,8 @@ class MapLocationPlatformView(binaryMessenger: BinaryMessenger, context: Context
     /** GeoFence client */
     private var mGeoFenceClient: GeoFenceClient = GeoFenceClient(mContext?.applicationContext);
 
+    private var mInfoWindowAdapter: InfoWindowAdapter = InfoWindowAdapter(mContext!!);
+
     /** Init */
     init {
         //Method call handler
@@ -76,6 +82,9 @@ class MapLocationPlatformView(binaryMessenger: BinaryMessenger, context: Context
             mMapView.map.uiSettings.apply {
                 isCompassEnabled = true;
             }
+            mMapView.map.setOnMarkerClickListener(this)
+            mInfoWindowAdapter.setOnConfirmListener(this);
+            mMapView.map.setInfoWindowAdapter(mInfoWindowAdapter);
         }
 
 
@@ -505,5 +514,26 @@ class MapLocationPlatformView(binaryMessenger: BinaryMessenger, context: Context
         //可通过AMapNavi.setUseInnerVoice(true) 开启内置语音功能
         AMapNavi.getInstance(mContext).setUseInnerVoice(true);
         AmapNaviPage.getInstance().showRouteActivity(mContext, AmapNaviParams(null), null);
+    }
+
+    override fun onMarkerClick(marker: Marker?): Boolean {
+        marker?.apply {
+            if (isInfoWindowShown) {
+                hideInfoWindow()
+            } else {
+                showInfoWindow()
+            }
+        }
+        //返回 true 则表示接口已响应事件，否则返回false
+        return true
+    }
+
+    override fun confirm(marker: Marker?) {
+        methodChannel.invokeMethod("infoWindowConfirm", mutableMapOf(
+                Pair("title", marker?.title),//标题
+                Pair("snippet", marker?.snippet),//内容
+                Pair("latitude", marker?.position?.latitude),//纬度
+                Pair("longitude", marker?.position?.longitude)//经度
+        ));
     }
 }

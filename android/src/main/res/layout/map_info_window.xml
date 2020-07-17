@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="200dp"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/close_img"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginEnd="10dp"
+        android:src="@drawable/ic_close_black_24dp"
+        android:tint="#808080"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/info_bg_group"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:background="#ffffff"
+        android:orientation="vertical"
+        android:paddingLeft="10dp"
+        android:paddingTop="10dp"
+        android:paddingRight="10dp">
+
+        <TextView
+            android:id="@+id/title_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:hint="title"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/content_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/title_tv"
+            android:gravity="start"
+            android:hint="content"
+            android:textSize="12sp" />
+
+        <View
+            android:id="@+id/info_horizontal_line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="5dp"
+            android:background="#DFDFDF" />
+
+        <LinearLayout
+            android:id="@+id/info_more_operation_group"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/detail_group"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:visibility="gone">
+
+                <ImageView
+                    android:layout_width="17dp"
+                    android:layout_height="18dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_detail" />
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="详情"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <View
+                android:id="@+id/info_vertical_line"
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="0dp"
+                android:background="#DFDFDF" />
+
+            <LinearLayout
+                android:id="@+id/navi_group"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="0dp"
+                android:layout_weight="1"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="19dp"
+                    android:layout_height="18dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_navigation_black_24dp"
+                    android:tint="#2292f1" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="去这里"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <View
+                android:id="@+id/info_vertical_right_line"
+                android:layout_width="2dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="0dp"
+                android:background="#DFDFDF" />
+
+        </LinearLayout>
+
+        <!--地址展示信息-->
+        <RelativeLayout
+            android:id="@+id/info_address_group"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:visibility="gone">
+
+            <!--当前图标的地址描述信息-->
+            <TextView
+                android:id="@+id/info_address_description_tv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="地址信息"
+                android:textSize="12sp" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+
+</RelativeLayout>

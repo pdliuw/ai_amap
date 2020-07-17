@@ -34,6 +34,16 @@ class _MyAppState extends State<MyApp> {
           print(
               "定位成功：${locationResult.haveAddress()},${locationResult.latitude},${locationResult.longitude}");
           _locationInfo = "${locationResult.country}";
+
+          //添加标记
+          _locationController.clearAllOverlay(isKeepMyLocationOverlay: true);
+          print("添加：标记");
+          _locationController.addMarker(
+            latitude: 39.909187,
+            longitude: 116.397451,
+            title: "天安门",
+            snippet: "天安门广场",
+          );
         });
       },
       geoFenceFinishResultCallback: (GeoFenceFinishedResult result) {
@@ -47,6 +57,13 @@ class _MyAppState extends State<MyApp> {
           _onPlatformViewCreated = true;
           requestPermission();
         });
+      },
+      infoWindowReceiveResultCallback: (InfoWindowConfirmResult result) {
+        setState(() {
+          _locationInfo =
+              "位置点：${result.title},${result.content},${result.latitude},${result.longitude}";
+        });
+        _locationController.startNavigatorWidget();
       },
     );
 
@@ -76,13 +93,14 @@ class _MyAppState extends State<MyApp> {
             _locationController..recreateLocationService();
             _locationController.startLocation();
 
-            _locationController.recreateGeoFenceClient();
-            //默认设置：北京锋创科技园的经纬度地址
-            _locationController.addGeoFence(
-                latitude: 39.780718,
-                longitude: 116.56848,
-                radius: 500,
-                customId: "定制化的业务自定义ID");
+//            _locationController.recreateGeoFenceClient();
+//              //默认设置：北京锋创科技园的经纬度地址
+//            _locationController.addGeoFence(
+//                latitude: 39.780718,
+//                longitude: 116.56848,
+//                radius: 500,
+//                customId: "定制化的业务自定义ID");
+
           }
         }
       }
@@ -129,12 +147,6 @@ class _MyAppState extends State<MyApp> {
                 _locationController.stopLocation();
               },
               child: Text("停止定位"),
-            ),
-            FlatButton(
-              onPressed: () {
-                _locationController.startNavigatorWidget();
-              },
-              child: Text("启动导航组件"),
             ),
             Expanded(
               child: _aMapWidget,

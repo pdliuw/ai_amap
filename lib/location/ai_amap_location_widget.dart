@@ -1,6 +1,7 @@
 import 'package:ai_amap/global_config.dart';
 import 'package:ai_amap/location/geo_fence_finished_result.dart';
 import 'package:ai_amap/location/geo_fence_receive_result.dart';
+import 'package:ai_amap/location/info_window_confirm_result.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -14,6 +15,9 @@ typedef AddGeoFenceFinishResultCallback = Function(
 
 typedef AddGeoFenceReceiveResultCallback = Function(
     GeoFenceReceiveResult receiveResult);
+
+typedef InfoWindowReceiveResultCallback = Function(
+    InfoWindowConfirmResult result);
 
 ///
 /// AiAMapLocationPlatformWidget
@@ -84,6 +88,7 @@ class AiAMapLocationPlatformWidgetController {
   LocationResultCallback _locationCallback;
   AddGeoFenceFinishResultCallback _geoFenceFinishedCallback;
   AddGeoFenceReceiveResultCallback _geoFenceReceiveCallback;
+  InfoWindowReceiveResultCallback _infoWindowReceiveResultCallback;
 
   ///
   /// AiAMapLocationPlatformWidgetController
@@ -93,6 +98,7 @@ class AiAMapLocationPlatformWidgetController {
     LocationResultCallback locationResultCallback,
     AddGeoFenceFinishResultCallback geoFenceFinishResultCallback,
     AddGeoFenceReceiveResultCallback geoFenceReceiveResultCallback,
+    InfoWindowReceiveResultCallback infoWindowReceiveResultCallback,
   }) {
     //assert
     assert(platformViewCreatedCallback != null);
@@ -104,6 +110,7 @@ class AiAMapLocationPlatformWidgetController {
 
     _geoFenceFinishedCallback = geoFenceFinishResultCallback;
     _geoFenceReceiveCallback = geoFenceReceiveResultCallback;
+    _infoWindowReceiveResultCallback = infoWindowReceiveResultCallback;
 
     //MethodChannel: 'android and ios' -> 'flutter'
     _methodChannel.setMethodCallHandler((MethodCall call) {
@@ -132,6 +139,13 @@ class AiAMapLocationPlatformWidgetController {
               arguments: call.arguments);
           if (_geoFenceReceiveCallback != null) {
             _geoFenceReceiveCallback(geoFenceReceiveResult);
+          }
+          break;
+        case "infoWindowConfirm":
+          var infoWindowResult = InfoWindowConfirmResult.convertFromNative(
+              arguments: call.arguments);
+          if (_infoWindowReceiveResultCallback != null) {
+            _infoWindowReceiveResultCallback(infoWindowResult);
           }
           break;
         default:
