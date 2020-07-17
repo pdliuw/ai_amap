@@ -8,3 +8,4 @@ export 'ai_amap_widget.dart';
 export 'package:ai_amap/location/location_result.dart';
 export 'package:ai_amap/location/geo_fence_finished_result.dart';
 export 'package:ai_amap/location/geo_fence_receive_result.dart';
+export 'package:ai_amap/location/info_window_confirm_result.dart';
