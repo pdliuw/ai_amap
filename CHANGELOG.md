@@ -1,3 +1,8 @@
+## [0.2.1]
+
+1. fix something,
+2. improve health,
+
 ## [0.2.0]
 
 1. fix something,
