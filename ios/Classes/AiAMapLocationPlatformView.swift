@@ -43,6 +43,7 @@ class AiAMapLocationPlatformView:NSObject,FlutterPlatformView,MAMapViewDelegate,
     }
     func initMapView(){
         mapView = MAMapView()
+        mapView.delegate = self
     }
     
     func view() -> UIView {
@@ -69,6 +70,13 @@ class AiAMapLocationPlatformView:NSObject,FlutterPlatformView,MAMapViewDelegate,
                 //set api key
                 self.setApiKey(key: apiKey);
                
+                break;
+            case "addMarker":
+                let latitude: Double = arg?["latitude"] as! Double;
+                let longitude: Double = arg?["longitude"] as! Double;
+                let title:String = arg?["title"] as! String;
+                let snippet:String = arg?["snippet"] as! String;
+                self.addMarker(latitude: latitude, longitude: longitude, title: title, snippet: snippet);
                 break;
             case "recreateLocationService":
                 //recreate location service
@@ -176,6 +184,19 @@ class AiAMapLocationPlatformView:NSObject,FlutterPlatformView,MAMapViewDelegate,
         //在调用定位时，需要添加Key，需要注意的是请在 SDK 任何类的初始化以及方法调用之前设置正确的 Key
         AMapServices.shared().apiKey = key;
     }
+    
+    func addMarker(latitude: Double, longitude: Double, title: String, snippet: String) {
+        let pointAnnotation = MAPointAnnotation()
+        pointAnnotation.coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+        pointAnnotation.title = title;
+        pointAnnotation.subtitle = snippet
+    
+        mapView.addAnnotation(pointAnnotation)
+    }
+    func clearAllOverlay(){
+        
+    
+    }
     func recreateLocationService(){
         mAMapLocationManager = AMapLocationManager.init();
     }
@@ -183,7 +204,67 @@ class AiAMapLocationPlatformView:NSObject,FlutterPlatformView,MAMapViewDelegate,
     func destroyLocationService(){
         
     }
+
+    //MARK: - MAMapViewDelegate
     
+    func mapView(_ mapView: MAMapView!, viewFor annotation: MAAnnotation!) -> MAAnnotationView! {
+        
+        if annotation.isKind(of: MAPointAnnotation.self) {
+            
+            if(annotation.isKind(of: MAUserLocation.self)){
+                return nil;
+            }else{
+                
+                let pointReuseIndetifier = "pointReuseIndetifier"
+                var annotationView: MAPinAnnotationView? = mapView.dequeueReusableAnnotationView(withIdentifier: pointReuseIndetifier) as! MAPinAnnotationView?
+                
+                if annotationView == nil {
+                    annotationView = MAPinAnnotationView(annotation: annotation, reuseIdentifier: pointReuseIndetifier)
+                }
+                
+                let button = UIButton(type: UIButton.ButtonType.system);
+                button.frame = CGRect(x: 10, y: 10, width: 60, height: 40);
+                button.setTitle("去导航", for: UIControl.State.normal)
+                button.setTitleColor(UIColor.blue, for: UIControl.State.normal)
+                button.backgroundColor = UIColor.white
+                button.setImage(UIImage(named: "Image"), for: UIControl.State.normal)
+                naviTitle = annotation.title as! String;
+                naviSnippet = annotation.subtitle as! String;
+                naviLatitude  = annotation.coordinate.latitude;
+                naviLongitude = annotation.coordinate.longitude;
+                
+                button.addTarget(self, action:#selector(buttonAtion(button:)), for:UIControl.Event.touchUpInside)
+                
+                annotationView!.canShowCallout = true
+                annotationView!.animatesDrop = true
+                annotationView!.isDraggable = true
+                annotationView!.rightCalloutAccessoryView = button
+                
+                annotationView!.pinColor = MAPinAnnotationColor.red
+                
+                return annotationView!
+            }
+        }
+        
+        return nil
+    }
+    var naviTitle:String?;
+    var naviSnippet:String?;
+    var naviLatitude:Double?;
+    var naviLongitude:Double?;
+    
+    
+    @objc func buttonAtion(button:UIButton){
+        
+        let infoWindowConfirm:[String:Any] = [
+            "title" : naviTitle,
+            "snippet" : naviSnippet,
+            "latitude" : naviLatitude,
+            "longitude" : naviLongitude,
+        ]
+        
+        self.methodChannel?.invokeMethod("infoWindowConfirm", arguments: infoWindowConfirm);
+    }
     
     private func doRequireLocationAuth(_ manager: AMapLocationManager?, doRequireLocationAuth locationManager: CLLocationManager?) {
         locationManager?.requestAlwaysAuthorization()
