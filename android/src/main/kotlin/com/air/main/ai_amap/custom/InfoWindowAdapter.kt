@@ -45,9 +45,9 @@ class InfoWindowAdapter(context: Context) : AMap.InfoWindowAdapter, View.OnClick
 
 
     /**
-     * 自定义infowinfow窗口
+     * 自定义infoWindow窗口
      */
-    fun render(marker: Marker, view: View) {
+    private fun render(marker: Marker, view: View) {
         //如果想修改自定义InfoWindow中内容，请通过view找到它并修改
         mMarker = marker;
         val titleTv: TextView = view.findViewById(R.id.title_tv);
