@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.icu.text.IDNA
 import android.net.ConnectivityManager
 import android.os.Bundle
 import android.view.View
@@ -71,10 +70,6 @@ class MapLocationPlatformView(binaryMessenger: BinaryMessenger, context: Context
     init {
         //Method call handler
         methodChannel.setMethodCallHandler(this);
-    }
-
-    /** Platform view */
-    override fun getView(): View {
 
         mMapView.let {
             mMapView.onCreate(null);
@@ -86,8 +81,10 @@ class MapLocationPlatformView(binaryMessenger: BinaryMessenger, context: Context
             mInfoWindowAdapter.setOnConfirmListener(this);
             mMapView.map.setInfoWindowAdapter(mInfoWindowAdapter);
         }
+    }
 
-
+    /** Platform view */
+    override fun getView(): View {
         return mMapView;
     }
 
