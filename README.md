@@ -7,9 +7,6 @@
 |[English Document](https://github.com/pdliuw/ai_amap/blob/master/README_EN.md)|[中文文档](https://github.com/pdliuw/ai_amap)|
 |:-|:-|
 
-## 注意：
-
-内嵌高德地图导航组件时，首次启动app进入导航页面时，没有导航声音；请重启app后再次进入，才有导航声音
 
 ## Effect
 
@@ -78,11 +75,12 @@ import 'package:ai_amap/ai_amap.dart';
 
 配置权限
 
-Android权限配置:
+<details>
+<summary>Android</summary>
 
 ```
 
-<!--
+    <!--
     地图SDK（包含其搜索功能）需要的基础权限
     -->
 
@@ -160,16 +158,27 @@ Android权限配置:
 
 ```
 
-iOS权限配置:
+</details>
+
+<details>
+<summary>iOS</summary>
 
 
 ```
 
-    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-    <string>Location permission</string>
+	<key>NSFileProviderPresenceUsageDescription</key>
+	<string>使用时允许访问文件</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>始终允许定位(提高后台定位准确率)</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>使用时始终允许定位</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>使用时允许定位</string>
 
 
 ```
+
+** 为提高iOS定位成功率，请打开-->'Background Modes' --> 勾选☑ ️'Location Updates' **
 
 iOS支持PlatformView配置：
 
@@ -179,32 +188,59 @@ iOS支持PlatformView配置：
     <true/>
     
 ```
-
+</details>
 
 ### 1.使用'地图'的地方中：
 
-* 1、使用地图
+* 1、使用地图Widget
 
 ```
-      @override
-      Widget build(BuildContext context) {
-        return MaterialApp(
-          home: Scaffold(
-            appBar: AppBar(
-              title: const Text('Plugin example app'),
-            ),
-            body: Column(
-              children: [
-                Expanded(
-                  child: AiAMapPlatformWidget(),
-                ),
-              ],
-            ),
-          ),
-        );
-      }
+    //map widget
+    _aMapWidget = AiAMapLocationPlatformWidget(
+      platformWidgetController: _locationController,
+    );
 
 ```
+
+* 2、使用地图Controller
+
+```
+
+    _locationController = AiAMapLocationPlatformWidgetController(
+      locationResultCallback:
+          (AiAMapLocationResult locationResult, bool isSuccess) {
+        setState(() {
+          _currentState = "定位:$isSuccess";
+        });
+
+        if (locationResult.haveAddress()) {
+          _locationController.stopLocation();
+
+          setState(() {
+            if (widget._locationResultTest != null) {
+              widget._locationResultTest(locationResult, isSuccess);
+            }
+            _locationAddress = locationResult.address;
+          });
+
+        }
+      },
+      platformViewCreatedCallback: (int id) {
+        setState(() {
+          //1、ApiKey
+          AiAMapLocationPlatformWidgetController.setApiKey(
+              apiKey: "$_yourPrimaryKey");
+          //2、初始化定位服务
+          _locationController..recreateLocationService();
+          _locationController.startLocation();
+          setState(() {
+            _currentState = "开始定位";
+          });
+        });
+      },
+
+```
+
 
 
 ## LICENSE
