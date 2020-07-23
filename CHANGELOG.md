@@ -1,3 +1,7 @@
+## [1.0.0]
+
+1. publish stable version
+
 ## [0.2.1]
 
 1. fix something,
