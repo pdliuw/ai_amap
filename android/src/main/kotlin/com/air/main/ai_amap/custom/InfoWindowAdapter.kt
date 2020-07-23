@@ -1,6 +1,7 @@
 package com.air.main.ai_amap.custom
 
 import android.content.Context
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
@@ -56,6 +57,21 @@ class InfoWindowAdapter(context: Context) : AMap.InfoWindowAdapter, View.OnClick
         //show info
         titleTv.text = marker.title;
         contentTv.text = marker.snippet;
+        if (TextUtils.isEmpty(marker.title)) {
+            titleTv.visibility = View.GONE;
+        } else {
+            titleTv.visibility = View.VISIBLE;
+        }
+        if (TextUtils.isEmpty(marker.snippet)) {
+            contentTv.visibility = View.GONE;
+        } else {
+            titleTv.visibility = View.VISIBLE;
+        }
+        if (TextUtils.isEmpty(marker.title) && TextUtils.isEmpty(marker.snippet)) {
+            titleTv.visibility = View.VISIBLE;
+            contentTv.visibility = View.GONE;
+            titleTv.text = "当前位置";
+        }
 
 //        mInfoWindowModel = convertToModel(marker.getSnippet());
 
