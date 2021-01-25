@@ -192,6 +192,9 @@ iOS支持PlatformView配置：
 
 ### 1.使用'地图'的地方中：
 
+* 完善的封装组件请参阅：[AppLocationAddressWidget](https://github.com/pdliuw/ai_amap/blob/master/example/lib/app_location_address_widget.dart)
+* 相关权限的交互请参阅：[main.dart](https://github.com/pdliuw/ai_amap/blob/master/example/lib/main.dart)
+
 * 1、使用地图Widget
 
 ```
@@ -217,8 +220,8 @@ iOS支持PlatformView配置：
           _locationController.stopLocation();
 
           setState(() {
-            if (widget._locationResultTest != null) {
-              widget._locationResultTest(locationResult, isSuccess);
+            if (widget._locationResultCallback != null) {
+              widget._locationResultCallback(locationResult, isSuccess);
             }
             _locationAddress = locationResult.address;
           });
@@ -241,7 +244,8 @@ iOS支持PlatformView配置：
 
 ```
 
-
+* 地图模块拿来即用：[AppLocationAddressWidget](https://github.com/pdliuw/ai_amap/blob/master/example/lib/app_location_address_widget.dart)
+* 相关权限的交互请参阅：[main.dart](https://github.com/pdliuw/ai_amap/blob/master/example/lib/main.dart)
 
 ## LICENSE
 

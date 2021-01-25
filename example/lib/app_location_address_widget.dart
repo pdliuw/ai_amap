@@ -6,7 +6,7 @@ import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 /// AppAMapLocationAddressWidget
 // ignore: must_be_immutable
 class AppAMapLocationAddressWidget extends StatefulWidget {
-  LocationResultCallback _locationResultTest;
+  LocationResultCallback _locationResultCallback;
 
   ///
   /// Default style
@@ -18,7 +18,7 @@ class AppAMapLocationAddressWidget extends StatefulWidget {
     assert(locationType != null);
 
     //
-    _locationResultTest = locationResultCallback;
+    _locationResultCallback = locationResultCallback;
   }
   @override
   State<StatefulWidget> createState() {
@@ -56,8 +56,8 @@ class _locationState extends State<AppAMapLocationAddressWidget> {
           _locationController.stopLocation();
 
           setState(() {
-            if (widget._locationResultTest != null) {
-              widget._locationResultTest(locationResult, isSuccess);
+            if (widget._locationResultCallback != null) {
+              widget._locationResultCallback(locationResult, isSuccess);
             }
             _locationAddress = locationResult.address;
           });

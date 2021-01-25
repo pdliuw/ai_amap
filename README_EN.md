@@ -74,7 +74,8 @@ import 'package:ai_amap/ai_amap.dart';
 
 配置权限
 
-Android权限配置:
+<details>
+<summary>Android</summary>
 
 ```
 
@@ -94,18 +95,89 @@ Android权限配置:
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <!--允许程序访问CellID或WiFi热点来获取粗略的位置-->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+    <!--
+    地图定位需要的权限
+    -->
+
+    <!--用于进行网络定位-->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <!--用于访问GPS定位-->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <!--用于获取运营商信息，用于支持提供运营商信息相关的接口-->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <!--用于访问wifi网络信息，wifi信息会用于进行网络定位-->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <!--用于获取wifi的获取权限，wifi信息会用来进行网络定位-->
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <!--用于访问网络，网络定位需要上网-->
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <!--用于读取手机当前的状态-->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <!--用于写入缓存数据到扩展存储卡-->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <!--用于申请调用A-GPS模块-->
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS"/>
+
+    <!--
+    导航所需权限
+    -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+
+    <application>
     
+    ...    
+
+        <meta-data
+            android:name="com.amap.api.v2.apikey"
+            android:value="${apiKey}" />
+        <!--
+        https://lbs.amap.com/api/android-location-sdk/guide/android-location/getlocation
+        (请在application标签中声明service组件,每个app拥有自己单独的定位service。)
+        -->
+        <service android:name="com.amap.api.location.APSService"></service>
+
+        <!--
+        地图导航组件
+        -->
+        <activity android:name="com.amap.api.navi.AmapRouteActivity"
+            android:theme="@android:style/Theme.NoTitleBar"
+            android:configChanges="orientation|keyboardHidden|screenSize" />
+
+    </application>
+
 ```
 
-iOS权限配置:
+</details>
 
-```
-
-    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-    <string>Location permission</string>
+<details>
+<summary>iOS</summary>
 
 
 ```
+
+	<key>NSFileProviderPresenceUsageDescription</key>
+	<string>使用时允许访问文件</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>始终允许定位(提高后台定位准确率)</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>使用时始终允许定位</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>使用时允许定位</string>
+
+
+```
+
+** 为提高iOS定位成功率，请打开-->'Background Modes' --> 勾选☑ ️'Location Updates' **
 
 iOS支持PlatformView配置：
 
@@ -115,33 +187,64 @@ iOS支持PlatformView配置：
     <true/>
     
 ```
-
+</details>
 
 ### 1.使用'地图'的地方中：
 
-* 1、使用地图
+* 完善的封装组件请参阅：[AppLocationAddressWidget](https://github.com/pdliuw/ai_amap/blob/master/example/lib/app_location_address_widget.dart)
+* 相关权限的交互请参阅：[main.dart](https://github.com/pdliuw/ai_amap/blob/master/example/lib/main.dart)
+
+* 1、使用地图Widget
 
 ```
-      @override
-      Widget build(BuildContext context) {
-        return MaterialApp(
-          home: Scaffold(
-            appBar: AppBar(
-              title: const Text('Plugin example app'),
-            ),
-            body: Column(
-              children: [
-                Expanded(
-                  child: AiAMapPlatformWidget(),
-                ),
-              ],
-            ),
-          ),
-        );
-      }
+    //map widget
+    _aMapWidget = AiAMapLocationPlatformWidget(
+      platformWidgetController: _locationController,
+    );
 
 ```
 
+* 2、使用地图Controller
+
+```
+
+    _locationController = AiAMapLocationPlatformWidgetController(
+      locationResultCallback:
+          (AiAMapLocationResult locationResult, bool isSuccess) {
+        setState(() {
+          _currentState = "定位:$isSuccess";
+        });
+
+        if (locationResult.haveAddress()) {
+          _locationController.stopLocation();
+
+          setState(() {
+            if (widget._locationResultCallback != null) {
+              widget._locationResultCallback(locationResult, isSuccess);
+            }
+            _locationAddress = locationResult.address;
+          });
+
+        }
+      },
+      platformViewCreatedCallback: (int id) {
+        setState(() {
+          //1、ApiKey
+          AiAMapLocationPlatformWidgetController.setApiKey(
+              apiKey: "$_yourPrimaryKey");
+          //2、初始化定位服务
+          _locationController..recreateLocationService();
+          _locationController.startLocation();
+          setState(() {
+            _currentState = "开始定位";
+          });
+        });
+      },
+
+```
+
+* 地图模块拿来即用：[AppLocationAddressWidget](https://github.com/pdliuw/ai_amap/blob/master/example/lib/app_location_address_widget.dart)
+* 相关权限的交互请参阅：[main.dart](https://github.com/pdliuw/ai_amap/blob/master/example/lib/main.dart)
 
 ## LICENSE
 
