@@ -1,3 +1,8 @@
+## [1.1.0]
+
+* adapter: flutter version = v1.22
+* upgrade iOS development target from 8.0 to 9.0
+
 ## [1.0.1]
 
 1. improve health

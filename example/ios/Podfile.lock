@@ -32,7 +32,7 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/permission_handler/ios"
 
 SPEC CHECKSUMS:
-  ai_amap: e3fe698d95a711726aec52ebcbcd0ac9c6141e74
+  ai_amap: ccf21d9cccb9f2171f7331fd6421a287f3712cfa
   AMapFoundation: 9ed923193b357ebb30a073e9fe255d3c24054d5a
   AMapLocation: c566d448285cd502c1e313063d9e2460bd4d7100
   AMapNavi: a47cf864249da145c0055fd31c49c0006da5ce64
@@ -41,4 +41,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: ffd7293eb7d5907b54a367fd400872baeef513a5
 
-COCOAPODS: 1.8.4
+COCOAPODS: 1.10.1
