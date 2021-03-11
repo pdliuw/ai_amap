@@ -189,6 +189,20 @@ iOS支持PlatformView配置：
 ```
 </details>
 
+<details>
+<summary>web</summary>
+
+
+```
+    
+    <script src="https://webapi.amap.com/loader.js" type="text/javascript"></script>
+    
+    
+```
+
+</details>
+
+
 ### 1.使用'地图'的地方中：
 
 * 完善的封装组件请参阅：[AppLocationAddressWidget](https://github.com/pdliuw/ai_amap/blob/master/example/lib/app_location_address_widget.dart)
