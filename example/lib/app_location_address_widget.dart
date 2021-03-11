@@ -108,6 +108,9 @@ class _locationState extends State<AppAMapLocationAddressWidget> {
 
   @override
   Widget build(BuildContext context) {
+    TargetPlatform targetPlatform = Theme.of(context).platform;
+    bool mobile = targetPlatform == TargetPlatform.android ||
+        targetPlatform == TargetPlatform.iOS;
     return Stack(
       children: <Widget>[
         _aMapWidget,
@@ -117,8 +120,8 @@ class _locationState extends State<AppAMapLocationAddressWidget> {
           right: 0,
           child: Container(
             margin: EdgeInsets.only(
-              left: 10,
-              top: 10,
+              left: mobile ? 10 : 100,
+              top: mobile ? 10 : 100,
               right: 50,
             ),
             decoration: ShapeDecoration(

@@ -59,6 +59,8 @@ class _MyAppState extends State<MyApp> {
       _requestAndroidPermission();
     } else if (TargetPlatform.iOS == platform) {
       _requestIosPermission();
+    } else {
+      _requestOtherPlatformPermission();
     }
   }
 
@@ -88,5 +90,9 @@ class _MyAppState extends State<MyApp> {
         });
       }
     }
+  }
+
+  _requestOtherPlatformPermission() {
+    _requestPermissionIsGranted = true;
   }
 }
