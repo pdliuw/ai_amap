@@ -15,6 +15,11 @@
 |![ios](https://github.com/pdliuw/ai_amap/blob/master/example/gif/ai_amap_ios.gif)|![android](https://github.com/pdliuw/ai_amap/blob/master/example/gif/ai_amap_android.gif)|
 |:-|:-|
 
+|web-map|
+|:-|
+|![web](https://github.com/pdliuw/ai_amap/blob/master/example/gif/ai_amap_web.gif)|
+|:-|
+
 
 ## 1.安装
 
