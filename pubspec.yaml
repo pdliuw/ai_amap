@@ -1,17 +1,22 @@
 name: ai_amap
 description: A new Flutter plugin about amap,support map location navi search.
-version: 1.1.0
+version: 2.0.0
 homepage: https://pdliuw.github.io/
 repository: https://github.com/pdliuw/ai_amap
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
-  flutter: ">=1.20.0 <2.0.0"
+  flutter: ">=1.20.0"
 
 dependencies:
   flutter:
     sdk: flutter
 
+  # https://pub.flutter-io.cn/packages/js
+  js: ^0.6.3
+  # develop web platform plugin
+  flutter_web_plugins:
+    sdk: flutter
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -34,6 +39,9 @@ flutter:
         pluginClass: AiAmapPlugin
       macos:
         pluginClass: AiAmapPlugin
+      web:
+        pluginClass: AiAMapWebPlugin
+        fileName: ai_amap_web_plugin.dart
 
   # To add assets to your plugin package, add an assets section, like this:
   # assets:

@@ -1,3 +1,10 @@
+## [2.0.0]
+
+* adapter: flutter version = 2.0.0
+* adapter: dart version = 2.12.0
+
+* add: new support web platform
+
 ## [1.1.0]
 
 * adapter: flutter version = v1.22

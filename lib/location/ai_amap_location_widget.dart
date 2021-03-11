@@ -1,4 +1,5 @@
 import 'package:ai_amap/global_config.dart';
+import 'package:ai_amap/interface/ai_amap_3d_platform_interface.dart';
 import 'package:ai_amap/location/geo_fence_finished_result.dart';
 import 'package:ai_amap/location/geo_fence_receive_result.dart';
 import 'package:ai_amap/location/info_window_confirm_result.dart';
@@ -48,29 +49,30 @@ class AiAMapLocationPlatformWidget extends StatefulWidget {
 class _State extends State<AiAMapLocationPlatformWidget> {
   @override
   Widget build(BuildContext context) {
-    return _getMapView();
+//    return _getMapView();
+    return AiAMap3DPlatformInterface.instance.buildPlatformView(context);
   }
 
-  Widget _getMapView() {
-    TargetPlatform platform = Theme.of(context).platform;
-    if (platform == TargetPlatform.android) {
-      return AndroidView(
-        viewType: GlobalConfig.VIEW_TYPE_ID_MAP_LOCATION_PLATFORM_VIEW,
-        onPlatformViewCreated:
-            widget._platformWidgetController.platformViewCreatedCallback,
-      );
-    } else if (platform == TargetPlatform.iOS) {
-      return UiKitView(
-        viewType: GlobalConfig.VIEW_TYPE_ID_MAP_LOCATION_PLATFORM_VIEW,
-        onPlatformViewCreated:
-            widget._platformWidgetController.platformViewCreatedCallback,
-      );
-    } else {
-      return Container(
-        child: Text("Unsupported platform"),
-      );
-    }
-  }
+//  Widget _getMapView() {
+//    TargetPlatform platform = Theme.of(context).platform;
+//    if (platform == TargetPlatform.android) {
+//      return AndroidView(
+//        viewType: GlobalConfig.VIEW_TYPE_ID_MAP_LOCATION_PLATFORM_VIEW,
+//        onPlatformViewCreated:
+//            widget._platformWidgetController.platformViewCreatedCallback,
+//      );
+//    } else if (platform == TargetPlatform.iOS) {
+//      return UiKitView(
+//        viewType: GlobalConfig.VIEW_TYPE_ID_MAP_LOCATION_PLATFORM_VIEW,
+//        onPlatformViewCreated:
+//            widget._platformWidgetController.platformViewCreatedCallback,
+//      );
+//    } else {
+//      return Container(
+//        child: Text("Unsupported platform"),
+//      );
+//    }
+//  }
 }
 
 ///
