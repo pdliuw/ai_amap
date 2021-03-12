@@ -2,7 +2,7 @@
   <library name="Flutter Plugins" type="FlutterPluginsLibraryType">
     <CLASSES>
       <root url="file://$PROJECT_DIR$" />
-      <root url="file://$PROJECT_DIR$/../ai_amap_web" />
+      <root url="file://$USER_HOME$/develop_tool/flutter_macos_2.0.0-stable/.pub-cache/hosted/pub.flutter-io.cn/ai_amap_web-2.0.0" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

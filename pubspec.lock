@@ -4,17 +4,17 @@ packages:
   ai_amap_platform_interface:
     dependency: "direct main"
     description:
-      path: "../ai_amap_platform_interface"
-      relative: true
-    source: path
-    version: "1.0.0"
+      name: ai_amap_platform_interface
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "2.0.0"
   ai_amap_web:
     dependency: "direct main"
     description:
-      path: "../ai_amap_web"
-      relative: true
-    source: path
-    version: "0.0.1"
+      name: ai_amap_web
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "2.0.0"
   async:
     dependency: transitive
     description:

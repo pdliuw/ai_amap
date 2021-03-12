@@ -1,3 +1,7 @@
+## [2.0.1]
+
+* emergency fix: v2.0.0 something
+
 ## [2.0.0]
 
 * adapter: flutter version = 2.0.0
