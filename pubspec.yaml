@@ -12,11 +12,10 @@ dependencies:
   flutter:
     sdk: flutter
 
-  # https://pub.flutter-io.cn/packages/js
-  js: ^0.6.3
-  # develop web platform plugin
-  flutter_web_plugins:
-    sdk: flutter
+  ai_amap_platform_interface:
+    path: ../ai_amap_platform_interface
+  ai_amap_web:
+    path: ../ai_amap_web
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -40,8 +39,7 @@ flutter:
       macos:
         pluginClass: AiAmapPlugin
       web:
-        pluginClass: AiAMapWebPlugin
-        fileName: ai_amap_web_plugin.dart
+        default_package: ai_amap_web
 
   # To add assets to your plugin package, add an assets section, like this:
   # assets:

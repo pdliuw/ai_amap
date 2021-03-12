@@ -1,8 +1,9 @@
 import 'package:ai_amap/global_config.dart';
-import 'package:ai_amap/interface/ai_amap_3d_platform_interface.dart';
 import 'package:ai_amap/location/geo_fence_finished_result.dart';
 import 'package:ai_amap/location/geo_fence_receive_result.dart';
 import 'package:ai_amap/location/info_window_confirm_result.dart';
+import 'package:ai_amap/mobile/ai_amap_3d_mobile_platform.dart';
+import 'package:ai_amap_platform_interface/ai_amap_platform_interface.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -48,31 +49,41 @@ class AiAMapLocationPlatformWidget extends StatefulWidget {
 
 class _State extends State<AiAMapLocationPlatformWidget> {
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-//    return _getMapView();
+    //create mobile instance
+    var platform = Theme.of(context).platform;
+    if (platform == TargetPlatform.android || platform == TargetPlatform.iOS) {
+      AiAMap3DPlatformInterface.instance = AiAMap3DMobilePlatform();
+      //add listener callback
+      AiAMap3DPlatformInterface.instance
+          .addPlatformViewCreatedCallback(_platformViewCreatedCallback);
+    }
     return AiAMap3DPlatformInterface.instance.buildPlatformView(context);
   }
 
-//  Widget _getMapView() {
-//    TargetPlatform platform = Theme.of(context).platform;
-//    if (platform == TargetPlatform.android) {
-//      return AndroidView(
-//        viewType: GlobalConfig.VIEW_TYPE_ID_MAP_LOCATION_PLATFORM_VIEW,
-//        onPlatformViewCreated:
-//            widget._platformWidgetController.platformViewCreatedCallback,
-//      );
-//    } else if (platform == TargetPlatform.iOS) {
-//      return UiKitView(
-//        viewType: GlobalConfig.VIEW_TYPE_ID_MAP_LOCATION_PLATFORM_VIEW,
-//        onPlatformViewCreated:
-//            widget._platformWidgetController.platformViewCreatedCallback,
-//      );
-//    } else {
-//      return Container(
-//        child: Text("Unsupported platform"),
-//      );
-//    }
-//  }
+  ///
+  /// callback
+  _platformViewCreatedCallback(int viewId) {
+    if (widget._platformWidgetController != null) {
+      if (widget._platformWidgetController.platformViewCreatedCallback !=
+          null) {
+        widget._platformWidgetController.platformViewCreatedCallback(viewId);
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    //remove listener callback
+    AiAMap3DPlatformInterface.instance
+        ?.removePlatformViewCreatedCallback(_platformViewCreatedCallback);
+  }
 }
 
 ///

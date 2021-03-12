@@ -1,7 +1,5 @@
-import 'package:ai_amap/interface/ai_amap_3d_platform_interface.dart';
+import 'package:ai_amap_platform_interface/ai_amap_platform_interface.dart';
 import 'package:flutter/material.dart';
-
-import 'ai_amap_platform_interface.dart';
 
 ///
 /// AiAMap3DMobilePlatform

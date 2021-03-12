@@ -8,6 +8,20 @@ packages:
       relative: true
     source: path
     version: "2.0.0"
+  ai_amap_platform_interface:
+    dependency: transitive
+    description:
+      path: "../../ai_amap_platform_interface"
+      relative: true
+    source: path
+    version: "1.0.0"
+  ai_amap_web:
+    dependency: transitive
+    description:
+      path: "../../ai_amap_web"
+      relative: true
+    source: path
+    version: "0.0.1"
   ai_awesome_message:
     dependency: "direct main"
     description:
