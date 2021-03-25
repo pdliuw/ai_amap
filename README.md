@@ -7,6 +7,11 @@
 |[English Document](https://github.com/pdliuw/ai_amap/blob/master/README_EN.md)|[中文文档](https://github.com/pdliuw/ai_amap)|
 |:-|:-|
 
+| Plugin | Pub | Points | Popularity | Likes |
+|-----|-----|--------|------------|-------|
+|[ai_amap](https://github.com/pdliuw/ai_amap)|[![pub package](https://img.shields.io/pub/v/ai_amap.svg)](https://pub.dev/packages/ai_amap)|[![pub points](https://badges.bar/ai_amap/pub%20points)](https://pub.dev/packages/ai_amap/score)|[![popularity](https://badges.bar/ai_amap/popularity)](https://pub.dev/packages/ai_amap/score)|[![likes](https://badges.bar/ai_amap/likes)](https://pub.dev/packages/ai_amap/score)|
+
+
 
 ## Effect
 
@@ -29,7 +34,11 @@
 
 在文件 'pubspec.yaml' 中添加
 
-[![pub package](https://img.shields.io/pub/v/ai_amap.svg)](https://pub.dev/packages/ai_amap)
+| Plugin | Pub | Points | Popularity | Likes |
+|-----|-----|--------|------------|-------|
+|[ai_amap](https://github.com/pdliuw/ai_amap)|[![pub package](https://img.shields.io/pub/v/ai_amap.svg)](https://pub.dev/packages/ai_amap)|[![pub points](https://badges.bar/ai_amap/pub%20points)](https://pub.dev/packages/ai_amap/score)|[![popularity](https://badges.bar/ai_amap/popularity)](https://pub.dev/packages/ai_amap/score)|[![likes](https://badges.bar/ai_amap/likes)](https://pub.dev/packages/ai_amap/score)|
+
+
 
 ```
 
