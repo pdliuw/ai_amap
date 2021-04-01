@@ -4,16 +4,9 @@ packages:
   ai_amap_platform_interface:
     dependency: "direct main"
     description:
-      name: ai_amap_platform_interface
-      url: "https://pub.flutter-io.cn"
-    source: hosted
-    version: "2.0.0"
-  ai_amap_web:
-    dependency: "direct main"
-    description:
-      name: ai_amap_web
-      url: "https://pub.flutter-io.cn"
-    source: hosted
+      path: "../ai_amap_platform_interface"
+      relative: true
+    source: path
     version: "2.0.0"
   async:
     dependency: transitive
@@ -74,18 +67,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_web_plugins:
-    dependency: transitive
-    description: flutter
-    source: sdk
-    version: "0.0.0"
-  js:
-    dependency: transitive
-    description:
-      name: js
-      url: "https://pub.flutter-io.cn"
-    source: hosted
-    version: "0.6.3"
   matcher:
     dependency: transitive
     description:

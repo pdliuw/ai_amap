@@ -1,3 +1,7 @@
+## [2.1.0]
+
+* add location service
+
 ## [2.0.1]
 
 * emergency fix: v2.0.0 something

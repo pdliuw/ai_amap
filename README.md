@@ -217,10 +217,11 @@ iOS支持PlatformView配置：
 
 </details>
 
-### 1.使用'地图'的地方中：
+### 1.使用'地图组件'的地方中：
 
 * 完善的封装组件请参阅：[AppLocationAddressWidget](https://github.com/pdliuw/ai_amap/blob/master/example/lib/app_location_address_widget.dart)
 * 相关权限的交互请参阅：[main.dart](https://github.com/pdliuw/ai_amap/blob/master/example/lib/main.dart)
+* 使用地图组件项目示例：[example](https://github.com/pdliuw/ai_amap/blob/master/example)
 
 * 1、使用地图Widget
 
@@ -268,6 +269,54 @@ iOS支持PlatformView配置：
           });
         });
       },
+
+```
+
+### 2.使用'定位服务'的地方中：
+
+* 定位服务核心功能示例：[map_location_page](https://github.com/pdliuw/ai_amap/blob/master/example/lib/map_location_page.dart)
+* 相关权限的交互请参阅：[main.dart](https://github.com/pdliuw/ai_amap/blob/master/example/lib/main.dart)
+* 使用定位服务项目示例：[example](https://github.com/pdliuw/ai_amap/blob/master/example)
+
+
+```
+
+      @override
+      void initState() {
+        super.initState();
+    
+        _locationController = AiAMapLocationController(
+          locationResultCallback: (result, successful) {
+            if (result.haveAddress()) {
+              _stopLocation();
+              setState(() {
+                _locationAddress = result.address;
+              });
+            }
+          },
+        );
+    
+        WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+          //1、ApiKey
+          AiAMapLocationController.setApiKey(
+              apiKey: "${GlobalConfig.AMAP_KEY}");
+          _startLocation();
+        });
+      }
+
+
+
+      void _startLocation() {
+        _locationController.startLocation();
+        
+      }
+
+        
+      void _stopLocation() {
+        _locationController.stopLocation();
+
+      }
+    
 
 ```
 
