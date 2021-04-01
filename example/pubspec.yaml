@@ -27,7 +27,9 @@ dependencies:
   # AntDesign,FontAwesome,Foundation,MaterialCommunityIcons,MaterialIcons,FontAwesome......
   flutter_vector_icons: ^0.2.1
   ai_awesome_message: ^0.3.0
-  permission_handler: ^5.0.1+1
+  permission_handler: ^6.1.1
+  # route
+  airoute: ^1.0.0
 
 dev_dependencies:
   flutter_test:

@@ -1,4 +1,5 @@
 import 'package:ai_amap/ai_amap.dart';
+import 'package:ai_amap_example/global_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 
@@ -37,7 +38,7 @@ class _locationState extends State<AppAMapLocationAddressWidget> {
 
   String _locationAddress = LOCATION_TIP_DEFAULT;
 
-  static const String _yourPrimaryKey = "c3e5689ab4b37aa36b56be87c5aa10b5";
+  static const String _yourPrimaryKey = GlobalConfig.AMAP_KEY_iOS;
 
   bool _showMyLocation = false;
   String _currentState;
