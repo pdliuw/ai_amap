@@ -2,6 +2,7 @@ package com.air.main.ai_amap
 
 import androidx.annotation.NonNull;
 import com.air.main.ai_amap.location.MapLocationPlatformViewFactory
+import com.air.main.ai_amap.location.MapLocationService
 import com.air.main.ai_amap.map.MapPlatformViewFactory
 
 import io.flutter.embedding.engine.plugins.FlutterPlugin
@@ -22,7 +23,10 @@ public class AiAmapPlugin : FlutterPlugin, MethodCallHandler {
     override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         channel = MethodChannel(flutterPluginBinding.getFlutterEngine().getDartExecutor(), "ai_amap")
         channel.setMethodCallHandler(this);
-
+        /*
+        Register location channel
+         */
+        MapLocationService(binaryMessenger = flutterPluginBinding.binaryMessenger,context = flutterPluginBinding.applicationContext);
         /*
         Register PlatformView
          */
@@ -44,7 +48,10 @@ public class AiAmapPlugin : FlutterPlugin, MethodCallHandler {
         fun registerWith(registrar: Registrar) {
             val channel = MethodChannel(registrar.messenger(), "ai_amap")
             channel.setMethodCallHandler(AiAmapPlugin())
-
+            /*
+            Register location channel
+            */
+            MapLocationService(binaryMessenger = registrar.messenger(),context = registrar.context());
             /*
             Register PlatformView
              */

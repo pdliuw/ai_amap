@@ -1,9 +1,10 @@
 //
-//  AiAMapLocationPlatformView.swift
+//  AiAMapLocationService.swift
 //  ai_amap
 //
-//  @author JamesAir on 2019/11/1.
+//  Created by JamesAir on 2021/3/31.
 //
+
 
 import Foundation
 import Flutter
@@ -13,14 +14,12 @@ import AMapLocationKit
 import UIKit
 
 //
-//  AiAMapLocationPlatformView
-class AiAMapLocationPlatformView:NSObject,FlutterPlatformView,MAMapViewDelegate, AMapLocationManagerDelegate,AMapGeoFenceManagerDelegate,AMapNaviCompositeManagerDelegate{
+//  AiAMapLocationService
+class AiAMapLocationService:NSObject, AMapLocationManagerDelegate{
     
     // MethodChannel
     var methodChannel:FlutterMethodChannel?;
     
-    // MapView
-    var mapView: MAMapView!
     
     var binaryMessenger:FlutterBinaryMessenger!;
     
@@ -35,27 +34,16 @@ class AiAMapLocationPlatformView:NSObject,FlutterPlatformView,MAMapViewDelegate,
         
         self.binaryMessenger = flutterBinaryMessenger;
         
-        initMethodChannel()
-        
-        
-        initMapView()
-        
+        initLocationServiceMethodChannel()
+
     }
-    func initMapView(){
-        mapView = MAMapView()
-        mapView.delegate = self
-    }
     
-    func view() -> UIView {
-        
-        return mapView;
-    }
     
-    func initMethodChannel(){
+    func initLocationServiceMethodChannel(){
         
         
         //create method channel single instance.
-        methodChannel = FlutterMethodChannel.init(name:AiAMapGlobalConfig.METHOD_CHANNEL_ID_MAP_LOCATION_PLATFORM_VIEW , binaryMessenger: binaryMessenger);
+        methodChannel = FlutterMethodChannel.init(name: AiAMapGlobalConfig.METHOD_CHANNEL_ID_MAP_LOCATION, binaryMessenger: binaryMessenger);
         
         
         // method channel call handler
@@ -70,13 +58,6 @@ class AiAMapLocationPlatformView:NSObject,FlutterPlatformView,MAMapViewDelegate,
                 //set api key
                 self.setApiKey(key: apiKey);
                
-                break;
-            case "addMarker":
-                let latitude: Double = arg?["latitude"] as! Double;
-                let longitude: Double = arg?["longitude"] as! Double;
-                let title:String = arg?["title"] as! String;
-                let snippet:String = arg?["snippet"] as! String;
-                self.addMarker(latitude: latitude, longitude: longitude, title: title, snippet: snippet);
                 break;
             case "recreateLocationService":
                 //recreate location service
@@ -95,31 +76,7 @@ class AiAMapLocationPlatformView:NSObject,FlutterPlatformView,MAMapViewDelegate,
                 //stop location
                 self.stopLocation();
                 break;
-                
-            case "showMyLocationIndicator":
-                //show my location indicator
-                self.showMyLocationIndicator(show:true);
-                break;
-            case "hideMyLocationIndicator":
-                //hide my location indicator
-                self.showMyLocationIndicator(show:false);
-                break;
-            case "recreateGeoFenceClient":
-                self.recreateGeoFenceClient();
-                break;
-            case "addGeoFence":
-                let latitude: Double = arg?["latitude"] as! Double;
-                let longitude: Double = arg?["longitude"] as! Double;
-                let radiusDoubleType: Double = arg?["radius"] as! Double;
-                let customId: String = arg?["customId"] as! String;
-                self.addGeoFence(latitude: latitude, longitude: longitude, radius: radiusDoubleType, customId: customId);
-                break;
-            case "clearAllGeoFence":
-                self.clearAllGeoFence();
-                break;
-            case "startNavigatorWidget":
-                self.showAMapNavigatorPage();
-                break;
+            
             default:
                 result("method:\(call.method) not implement");
             }
@@ -184,19 +141,7 @@ class AiAMapLocationPlatformView:NSObject,FlutterPlatformView,MAMapViewDelegate,
         //在调用定位时，需要添加Key，需要注意的是请在 SDK 任何类的初始化以及方法调用之前设置正确的 Key
         AMapServices.shared().apiKey = key;
     }
-    
-    func addMarker(latitude: Double, longitude: Double, title: String, snippet: String) {
-        let pointAnnotation = MAPointAnnotation()
-        pointAnnotation.coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
-        pointAnnotation.title = title;
-        pointAnnotation.subtitle = snippet
-    
-        mapView.addAnnotation(pointAnnotation)
-    }
-    func clearAllOverlay(){
-        
-    
-    }
+
     func recreateLocationService(){
         mAMapLocationManager = AMapLocationManager.init();
     }
@@ -206,65 +151,11 @@ class AiAMapLocationPlatformView:NSObject,FlutterPlatformView,MAMapViewDelegate,
     }
 
     //MARK: - MAMapViewDelegate
-    
-    func mapView(_ mapView: MAMapView!, viewFor annotation: MAAnnotation!) -> MAAnnotationView! {
-        
-        if annotation.isKind(of: MAPointAnnotation.self) {
-            
-            if(annotation.isKind(of: MAUserLocation.self)){
-                return nil;
-            }else{
-                
-                let pointReuseIndetifier = "pointReuseIndetifier"
-                var annotationView: MAPinAnnotationView? = mapView.dequeueReusableAnnotationView(withIdentifier: pointReuseIndetifier) as! MAPinAnnotationView?
-                
-                if annotationView == nil {
-                    annotationView = MAPinAnnotationView(annotation: annotation, reuseIdentifier: pointReuseIndetifier)
-                }
-                
-                let button = UIButton(type: UIButton.ButtonType.system);
-                button.frame = CGRect(x: 10, y: 10, width: 60, height: 40);
-                button.setTitle("去导航", for: UIControl.State.normal)
-                button.setTitleColor(UIColor.blue, for: UIControl.State.normal)
-                button.backgroundColor = UIColor.white
-                button.setImage(UIImage(named: "Image"), for: UIControl.State.normal)
-                naviTitle = annotation.title as! String;
-                naviSnippet = annotation.subtitle as! String;
-                naviLatitude  = annotation.coordinate.latitude;
-                naviLongitude = annotation.coordinate.longitude;
-                
-                button.addTarget(self, action:#selector(buttonAtion(button:)), for:UIControl.Event.touchUpInside)
-                
-                annotationView!.canShowCallout = true
-                annotationView!.animatesDrop = true
-                annotationView!.isDraggable = true
-                annotationView!.rightCalloutAccessoryView = button
-                
-                annotationView!.pinColor = MAPinAnnotationColor.red
-                
-                return annotationView!
-            }
-        }
-        
-        return nil
-    }
     var naviTitle:String?;
     var naviSnippet:String?;
     var naviLatitude:Double?;
     var naviLongitude:Double?;
-    
-    
-    @objc func buttonAtion(button:UIButton){
-        
-        let infoWindowConfirm:[String:Any] = [
-            "title" : naviTitle,
-            "snippet" : naviSnippet,
-            "latitude" : naviLatitude,
-            "longitude" : naviLongitude,
-        ]
-        
-        self.methodChannel?.invokeMethod("infoWindowConfirm", arguments: infoWindowConfirm);
-    }
+
     
     private func doRequireLocationAuth(_ manager: AMapLocationManager?, doRequireLocationAuth locationManager: CLLocationManager?) {
         locationManager?.requestAlwaysAuthorization()
@@ -363,16 +254,6 @@ class AiAMapLocationPlatformView:NSObject,FlutterPlatformView,MAMapViewDelegate,
         mAMapLocationManager.stopUpdatingLocation();
     }
     
-    func showMyLocationIndicator(show :Bool){
-        mapView.showsUserLocation = show;
-        mapView.userTrackingMode = MAUserTrackingMode.follow;
-        let r = MAUserLocationRepresentation();
-        r.showsHeadingIndicator = show;
-        r.showsAccuracyRing = show;
-        r.enablePulseAnnimation = show;
-        mapView.update(r);
-    }
-    
     
     func doNothing(){
         //do nothing
@@ -383,86 +264,7 @@ class AiAMapLocationPlatformView:NSObject,FlutterPlatformView,MAMapViewDelegate,
     func sendLocationResult(message:String?){
         methodChannel?.invokeMethod("startLocationResult", arguments: message);
     }
-    
-    func recreateGeoFenceClient(){
-        self.mAMapGeoFenceManager = AMapGeoFenceManager()
-        self.mAMapGeoFenceManager.delegate = self
-        
-    }
-    
-    func addGeoFence(latitude: Double, longitude: Double, radius: Double, customId: String){
-        //进入，离开，停留都要进行通知
-        self.mAMapGeoFenceManager.activeAction = [AMapGeoFenceActiveAction.inside, AMapGeoFenceActiveAction.outside, AMapGeoFenceActiveAction.stayed]
-        //允许后台定位
-        self.mAMapGeoFenceManager.allowsBackgroundLocationUpdates = true
-        
-        
-        let coordinate = CLLocationCoordinate2DMake(latitude, longitude);
-        self.mAMapGeoFenceManager.addCircleRegionForMonitoring(withCenter: coordinate, radius: radius, customID: customId);
 
-    }
-    
-    func showAMapNavigatorPage(){
-        let naviManager = AMapNaviCompositeManager.init();
-        naviManager.delegate = self;
-        naviManager.presentRoutePlanViewController(withOptions: nil);
-    }
-    
-    func amapGeoFenceManager(_ manager: AMapGeoFenceManager!, didAddRegionForMonitoringFinished regions: [AMapGeoFenceRegion]!, customID: String!, error: Error!) {
-        
-        var isAddGeoFenceSuccess: Bool = false;
-        var errorCode:Int;
-        var errorInfo: String;
-        
-
-        if let error = error {
-            isAddGeoFenceSuccess = false;
-            let error = error as NSError
-            errorCode = error.code
-            errorInfo = "添加围栏失败";
-        }
-        else {
-            isAddGeoFenceSuccess = true;
-            errorCode = 0;
-            errorInfo = "添加围栏成功";
-        }
-        let geoFenceFinishedMap:[String:Any] = [
-            "isAddGeoFenceSuccess":isAddGeoFenceSuccess,
-            "errorCode":errorCode
-        ];
-        self.methodChannel?.invokeMethod("addGeoFenceFinished", arguments: geoFenceFinishedMap);
-    }
-    
-    func amapGeoFenceManager(_ manager: AMapGeoFenceManager!, didGeoFencesStatusChangedFor region: AMapGeoFenceRegion!, customID: String!, error: Error!) {
-        
-        
-        
-        if error == nil {
-            
-            print("status changed \(region.description)")
-            
-            
-            let geoFenceResultMap:[String:Any] = [
-                "status":region.fenceStatus.rawValue,
-                "customId":region.customID ?? "",
-                "fenceId":region.identifier ?? "",//AMapGeoFenceRegion的唯一标识符
-            ];
-            
-            self.methodChannel?.invokeMethod("startGeoFenceReceiverResult", arguments: geoFenceResultMap);
-            
-            
-            
-        } else {
-            print("status changed error \(String(describing: error))")
-        }
-        
-        
-    }
-    
-    func clearAllGeoFence(){
-        
-        mAMapGeoFenceManager.removeAllGeoFenceRegions();
-        
-    }
 }
+
 

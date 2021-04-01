@@ -7,8 +7,9 @@ public class SwiftAiAmapPlugin: NSObject, FlutterPlugin {
     let instance = SwiftAiAmapPlugin()
     registrar.addMethodCallDelegate(instance, channel: channel)
     /* Register*/
-    registrar.register(AiAMapPlatformViewFactory(flutterBinaryMessenger:registrar.messenger()), withId:"view_type_id_map_platform_view")
-    registrar.register(AiAMapLocationPlatformViewFactory(flutterBinaryMessenger: registrar.messenger()), withId: "view_type_id_map_location_platform_view")
+    registrar.register(AiAMapPlatformViewFactory(flutterBinaryMessenger:registrar.messenger()), withId:AiAMapGlobalConfig.VIEW_TYPE_ID_MAP_PLATFORM_VIEW)
+    registrar.register(AiAMapLocationPlatformViewFactory(flutterBinaryMessenger: registrar.messenger()), withId: AiAMapGlobalConfig.VIEW_TYPE_ID_MAP_LOCATION_PLATFORM_VIEW)
+    AiAMapLocationService.init(flutterBinaryMessenger: registrar.messenger());
   }
 
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
