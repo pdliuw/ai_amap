@@ -2,16 +2,24 @@ import 'package:ai_amap/ai_amap.dart';
 import 'package:ai_amap_example/app_location_address_widget.dart';
 import 'package:airoute/airoute.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import 'map_main_select_widget.dart';
 
 void main() {
-  runApp(Airoute.createMaterialApp(
-    debugShowCheckedModeBanner: false,
-    home: MyApp(),
-  ));
+  runApp(
+    Shortcuts(
+      shortcuts: <LogicalKeySet, Intent>{
+        LogicalKeySet(LogicalKeyboardKey.select): ActivateIntent(),
+      },
+      child: Airoute.createMaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: MyApp(),
+      ),
+    ),
+  );
 }
 
 ///
